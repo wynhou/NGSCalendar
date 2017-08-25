@@ -1,0 +1,897 @@
+<div class="next-gear-header">
+
+</div>
+<div class="header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="pull-right margin-right-10">
+        <button class="btn btn-default" ng-click="m.addEventModal()"><b>Create Task</b></button>
+        <button class="btn btn-default" ng-click="m.manageGroupModal()"><i class="fa fa-users"></i>Manage Groups</button>
+        <!-- <button class="btn btn-default btn-large" uib-popover-template="'currentViewPopover.html'" popover-trigger="'outsideClick'" popover-placement="right"><i class="fa fa-eye"></i>Views</button> -->
+        <button class="btn btn-default" uib-popover-template="'sharePopover.html'" popover-trigger="'outsideClick'" popover-placement="auto"><i class="fa fa-share"></i>Share</button>
+
+      </div>
+
+      <h1 class="col-sm-2">Calendar</h1>
+
+
+      <div class="col-sm-3">
+        <div class="row">
+          <input class="col-xs-11 search-icon search-control" type="" ng-model="m.searchText" uib-typeahead="search for search in m.searchItems | filter:$viewValue | limitTo:8" placeholder="Search for Tasks" name="">
+          <button class="col-xs-1 btn btn-default btn-search">
+                           <b class="fa fa-search"></b>
+                       </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<div class="container-fluid">
+
+  <div class="col-md-2 sidebar hidden-sm">
+
+    <h4 class='top'>Show Results For:
+        <!-- <btn class="btn btn-primary btn-xs pull-right" uib-tooltip="Add calendar resources you would like to see on the calendar" uib-popover-template="'addRemoveResourcesPopover.html'" popover-trigger="'outsideClick'" popover-placement="bottom-left" >ADD RESOURCES</btn> -->
+      </h4>
+
+    <h2>Groups<btn class="btn btn-primary btn-sm" uib-popover-template="'addGroupsPopover.html'" popover-is-open="m.groupsPopover" ng-click="m.groupsPopover=!m.groupsPopover" popover-trigger="'outsideClick'" popover-placement="auto" ><b class="fa fa-users"></b></btn></h2>
+    <div ng-repeat="item in groups">
+      <div class="resource-items" ng-if="item.selected">
+
+        <div class="color-block-small" style="background:{{item.color}}">
+
+        </div>
+        {{item.title}}
+
+        <i class="fa fa-close pull-right" ng-click="item.selected = false; removeGroupItems(item.groupid);"></i>
+
+      </div>
+      <div class="group-container" ng-if="item.selected">
+        <div class="user-item" ng-repeat="user in item.children">
+          <i class="fa fa-user" style="color:{{employees[user-1].color}}"></i> {{employees[user-1].title}}
+        </div>
+      </div>
+    </div>
+    <!-- <h2>Equipment<btn class="btn btn-default btn-xs pull-right" uib-popover-template="'addEquipmentPopover.html'" popover-trigger="'outsideClick'" popover-placement="auto" ><b class="fa fa-plus"></b></btn></h2>
+      <div ng-repeat="item in equipments" class="resource-items" ng-if="item.selected">
+        {{item.title}}
+
+        <i class="fa fa-close pull-right" ng-click="item.selected = false"></i>
+
+      </div> -->
+
+
+    <h2>Employees<btn class="btn btn-primary btn-sm" uib-popover-template="'addEmployeesPopover.html'"  popover-is-open="m.employeesPopover" ng-click="m.employeesPopover=!m.employeesPopover"  popover-trigger="'outsideClick'" popover-placement="auto"><b class="fa fa-user"></b></btn></h2>
+    <div ng-repeat="item in employees" class="resource-items" ng-if="item.selected">
+      <i class="fa fa-user pull-left" style="color:{{item.color}}"></i> {{item.title}}
+
+      <i class="fa fa-close pull-right" ng-click="item.selected = false; removeEmployeeItems(item.id);"></i>
+
+    </div>
+
+    <h2>Participants<btn class="btn btn-primary btn-sm" uib-popover-template="'addParticipantsPopover.html'"  popover-is-open="m.participantsPopover" ng-click="m.participantsPopover=!m.participantsPopover"popover-trigger="'outsideClick'" popover-placement="auto" ><b class="fa fa-user-o"></b></btn></h2>
+    <div ng-repeat="item in participants" class="resource-items" ng-if="item.selected">
+      <i class="fa fa-user-o pull-left" style="color:{{item.color}}"></i> {{item.title}}
+
+      <i class="fa fa-close pull-right" ng-click="item.selected = false"></i>
+
+    </div>
+
+    <h4 class='margin-top-10'>Filter Tasks By:</h4>
+    <h2>Jobs<btn class="btn btn-primary btn-sm" uib-popover-template="'addJobTaskPopover.html'"  popover-is-open="m.jobtasksPopover" ng-click="m.jobtasksPopover=!m.jobtasksPopover"popover-trigger="'outsideClick'" popover-placement="auto" ><b class="fa fa-gavel"></b></btn></h2>
+    <div ng-repeat="item in jobTasks" class="resource-items" ng-if="item.selected">
+      <i class="fa fa-gavel pull-left" style="color:#f58059"></i> {{item.title}}
+
+      <i class="fa fa-close pull-right" ng-click="item.selected = false"></i>
+
+    </div>
+    <h2>Divisions<btn class="btn btn-primary btn-sm" uib-popover-template="'addDivisionsPopover.html'" popover-is-open="m.divisionsPopover" ng-click="m.divisionsPopover=!m.divisionsPopover" popover-trigger="'outsideClick'" popover-placement="auto" ><b class="fa fa-circle-o"></b></btn></h2>
+    <div ng-repeat="item in divisions" class="resource-items" ng-if="item.selected">
+      {{item.title}}
+      <img ng-src="imgs/divisions/{{item.url}}" class="image-icon" />
+      <i class="fa fa-close pull-right" ng-click="item.selected = false"></i>
+
+    </div>
+    <h2>Offices<btn class="btn btn-primary btn-sm" uib-popover-template="'addOfficesPopover.html'" popover-is-open="m.officesPopover" ng-click="m.officesPopover=!m.officesPopover" popover-trigger="'outsideClick'" popover-placement="auto" ><b class="fa fa-building"></b></btn></h2>
+    <div ng-repeat="item in offices" class="resource-items" ng-if="item.selected">
+      {{item.title}}
+      <img ng-src="imgs/divisions/{{item.url}}" class="image-icon" />
+      <i class="fa fa-close pull-right" ng-click="item.selected = false"></i>
+
+    </div>
+
+    <!-- <div class="no-resources" ng-show="!hasResource">
+      <b class="fa fa-info-circle"></b> Add at least 1 resource to populate the calendar
+
+    </div> -->
+
+  </div>
+
+
+
+
+  <div class="col-md-8 col-sm-12">
+
+    <!-- {{alertMessage }} -->
+    <div class="pull-right margin-left-10 btn-group calendar-toggle">
+      <button class="btn btn-default" ng-class="{'active':  calView=='day'}" ng-click="m.timeline=false; changeView('agendaDay', 'myCalendar'); calView='day'; m.toggleList = false">Day</button>
+      <button class="btn btn-default" ng-class="{'active':  calView=='week'}" ng-click="m.timeline=false; changeView('agendaWeek', 'myCalendar'); calView='week'; m.toggleList = false">Week</button>
+      <button class="btn btn-default" ng-class="{'active':  calView=='list'}" ng-click="changeView('listWeek', 'myCalendar'); calView='list'; m.toggleList = true">Task List</button>
+      <button class="btn btn-default" ng-class="{'active':  calView=='month'}" ng-click="m.timeline=false; changeView('month', 'myCalendar'); calView='month'; m.toggleList = false">Month</button>
+      <button class="btn btn-default" ng-class="{'active':  calView=='scheduler'}" ng-click="calView='scheduler'; m.timeline=false; changeView('timelineMonth', 'myCalendar');">Timeline</button>
+    </div>
+
+    <div class="calendar" id="my-calendar" ng-model="eventSources" calendar="myCalendar" ui-calendar="uiConfig.calendar"></div>
+  </div>
+  <div class="col-md-2 sidebar hidden-sm">
+    <h4 class='top'>Tasks Types:</h4>
+    <!-- <div class="dropdown-label">
+      Events
+      <i class="fa fa-chevron-down pull-right"></i>
+    </div> -->
+    <div class="dropdown">
+      <div class="checkbox">
+        <label><input type="checkbox" ng-model="one"> <b class="fa sidebar-fa fa-gavel"></b>Job Tasks
+     </label>
+
+      </div>
+      <div class="checkbox">
+        <label>
+   <input type="checkbox" ng-model="two"><b class="fa sidebar-fa fa-calendar"></b>Calendar Events
+ </label>
+      </div>
+      <div class="checkbox">
+        <label>
+   <input type="checkbox" ng-model="three"><b class="fa sidebar-fa fa-line-chart"></b>Marketing
+ </label>
+
+      </div>
+      <div class="checkbox">
+        <label>
+   <input type="checkbox" ng-model="four"><b class="fa sidebar-fa fa-tachometer"></b>Production
+ </label>
+        <!-- <button uib-popover-template="'moreProductionFiltersPopover.html'" popover-trigger="'outsideClick'" class="btn btn-default  btn-xs  pull-right" popover-placement="left"><b class="fa fa-bars" ></b></button> -->
+
+      </div>
+    </div>
+
+
+    <h4>My Calendars:</h4>
+
+    <div class="dropdown">
+      <div class="calendar-view-item checked" uib-tooltip="Currently Loaded Calendar" tooltip-class="customClass" tooltip-placement="left">
+
+        <div class="checked-block checked">
+
+        </div>
+        My default calendar
+      </div>
+      <div class="calendar-view-item" uib-tooltip="Load this calendar" tooltip-class="customClass" tooltip-placement="left">
+
+        <b class="fa fa-trash pull-right"></b>
+        <div class="checked-block">
+        </div>
+        Water Damage and Fire Damage Tasks
+      </div>
+      <div class="calendar-view-item" uib-tooltip="Load this calendar" tooltip-class="customClass" tooltip-placement="left">
+
+        <b class="fa fa-trash pull-right"></b>
+        <div class="checked-block">
+        </div>
+        Team Canada Tasks
+      </div>
+      <div class="calendar-view-item" uib-tooltip="Load this calendar" tooltip-class="customClass" tooltip-placement="left">
+
+        <b class="fa fa-trash pull-right"></b>
+        <div class="checked-block">
+        </div>
+        Management related
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-sm col-sm-12 margin-top-20">Create Calendar from Current View</button>
+
+    <!-- <div class="accordions">
+
+      <uib-accordion close-others="false">
+        <div uib-accordion-group class="panel-default" is-open="status.events">
+          <uib-accordion-heading ng-click="status.events = !status.events">
+            <div>
+              Events <i class="fa fa-chevron-down pull-right" ng-class="{'fa-chevron-down': status.events, 'fa-chevron-right': !status.events}"></i>
+            </div>
+          </uib-accordion-heading>
+
+        </div> -->
+
+    <!-- <div uib-accordion-group class="panel-default" is-open="status.division">
+          <uib-accordion-heading ng-click="status.division = !status.division">
+            <div>
+              Division <i class="fa fa-chevron-down pull-right" ng-class="{'fa-chevron-down': status.division, 'fa-chevron-right': !status.division}"></i>
+            </div>
+          </uib-accordion-heading>
+          <div class="dropdown">
+            <div class="checkbox">
+              <label><input type="checkbox" ng-model="five"> Division 1
+            </label>
+            </div>
+            <div class="checkbox">
+              <label>
+          <input type="checkbox" ng-model="six">
+      Division 2
+        </label>
+            </div>
+
+          </div>
+        </div> -->
+
+    </uib-accordion>
+
+  </div>
+
+
+
+
+</div>
+</div>
+
+
+<script type="text/ng-template" id="eventModal.html">
+  <!-- <div class="modal-header">
+    <h3 class="modal-title">Task</h3>
+  </div> -->
+
+  <div class="modal-body event-modal">
+
+    <button type="button pull-right" class="close" data-dismiss="modal" aria-hidden="true" ng-click="m.cancel()"><i class="fa fa-times-circle"></i></button>
+
+    <div class="event">
+      <div class="modal-draggable">
+
+        <div class="heading">
+          <h4 ng-click="m.selectedEvent.taskType='jobTask'" ng-class="{active: m.selectedEvent.taskType=='jobTask'}" class="item">
+          <i class="fa fa-gavel"></i>Job Task
+        </h4>
+          <h4 ng-click="m.selectedEvent.taskType='calendarEvent'" ng-class="{active: m.selectedEvent.taskType=='calendarEvent'}" class="item">
+          <i class="fa fa-calendar"></i>Calender Event
+        </h4>
+
+          <h4 ng-click="m.selectedEvent.taskType='marketingTask'" ng-class="{active: m.selectedEvent.taskType=='marketingTask'}" class="item">
+          <i class="fa fa-line-chart"></i>Marketing Task
+        </h4>
+          <div class="clearfix">
+
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class=" form-group">
+
+        <div class="row" ng-show="m.selectedEvent.taskType=='jobTask'">
+
+          <div class="col-md-3">
+            <label>Job #:</label>
+          </div>
+          <div class="col-md-9">
+            <input class="form-control" ng-model="m.selectedEvent.jobTitle" uib-typeahead="job for job in m.jobs | filter:$viewValue | limitTo:8" placeholder="Enter job number" />
+
+          </div>
+        </div>
+        <div class="row" ng-show="m.selectedEvent.taskType=='marketingTask'">
+
+          <div class="col-md-3">
+            <label>Company:</label>
+          </div>
+          <div class="col-md-9">
+            <select ng-model="m.selectedEvent.Company" class="form-control"><option>Never</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select>
+
+          </div>
+        </div>
+        <div class="row" ng-show="m.selectedEvent.taskType=='marketingTask'">
+
+          <div class="col-md-3">
+            <label>Company Contact:</label>
+          </div>
+          <div class="col-md-9">
+            <select ng-model="m.selectedEvent.companyContact" class="form-control"><option>Never</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select>
+
+          </div>
+        </div>
+        <div class="row" ng-show="m.selectedEvent.taskType=='marketingTask'">
+
+          <div class="col-md-3">
+            <label>Activity:</label>
+          </div>
+          <div class="col-md-9">
+            <select ng-model="m.selectedEvent.Activity" class="form-control"><option>Never</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select>
+
+          </div>
+        </div>
+        <div class="row" ng-show="m.selectedEvent.taskType=='marketingTask'">
+
+          <div class="col-md-3">
+            <label>Amount:</label>
+          </div>
+          <div class="col-md-6">
+            <input type="text" class="form-control" ng-model="m.selectedEvent.amount" />
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <label>Task:</label>
+          </div>
+
+          <div class="col-md-9">
+            <textarea class="form-control" placeholder="Enter task description" ng-model="m.selectedEvent.taskDescription" /></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <label>Start Date: </label>
+          </div>
+          <div class="col-md-6">
+            <input type="text" class="form-control" datetime-picker="MM/dd/yyyy HH:mm" ng-model="m.selectedEvent.startDate" ng-click="datestart=true" is-open="datestart" ng-required="true" close-text="Close" />
+          </div>
+        </div>
+        <div class="row">
+
+          <div class="col-md-3">
+            <label>End Date:</label>
+          </div>
+          <div class="col-md-6">
+            <input type="text" class="form-control" datetime-picker="MM/dd/yyyy HH:mm" ng-model="m.selectedEvent.endDate" ng-click="dateend=true" is-open="dateend" ng-required="true" close-text="Close" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <label>Date completion</label>
+          </div>
+          <div class="col-md-6">
+            <input type="text" class="form-control" datetime-picker="MM/dd/yyyy HH:mm" ng-model="m.selectedEvent.completedDate" ng-click="datecompleted=true" is-open="datecompleted" ng-required="true" close-text="Close" />
+            <div class="checkbox  margin-top-0">
+              <label><input type="checkbox" ng-model="m.selectedEvent.taskCompleted" ng-click="taskCompleted();"> Task Completed
+                </label>
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <label>Repeat:</label>
+          </div>
+          <div class="col-md-6">
+            <select ng-model="m.selectedEvent.repeat" class="form-control"><option>Never</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select>
+          </div>
+
+        </div>
+        <div class="row" ng-show="m.selectedEvent.repeat != 'Never' && m.selectedEvent.repeat != null">
+
+          <label>Repeat every:</label>
+          <input type="number" class="form-control" ng-model="m.selectedEvent.repeatEvery" />
+          <div class="pull-right"><span ng-if="m.selectedEvent.repeat == 'Daily'">days</span><span ng-if="m.selectedEvent.repeat == 'Weekly'">weeks</span><span ng-if="m.selectedEvent.repeat == 'Monthly'">months</span><span ng-if="m.selectedEvent.repeat == 'Yearly'">years</span>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <label>Assigned Resources</label>
+
+            <button class="btn btn-sm btn-primary pull-left btn-assign-resource" uib-popover-template="'addResourcesPopover.html'" popover-trigger="'outsideClick'" class="btn btn-default pull-right" popover-placement="auto">Assign Resources <b class="fa fa-arrow-right margin-left-0"></b></button>
+
+          </div>
+          <div class="col-md-9">
+            <div class="well margin-bottom-0">
+              <div ng-repeat="item in assignedResource | orderBy:'type'" class="added-item">
+                <i class="fa fa-user margin-right-10" style="color:{{item.color}}">
+
+                </i> {{item.title}} <b class="fa fa-close" ng-click="removeResource()"></b>
+              </div>
+              <div class="clearfix">
+
+              </div>
+              <h1 ng-show="assignedResource.length==0" class="no-results">No resources assigned</h1>
+            </div>
+            <div class="checkbox margin-top-0">
+              <label><input type="checkbox" ng-model="m.selectedEvent.notifyEmail"> Notify via email
+                </label>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+
+          <div class="col-md-9 col-md-push-3">
+            <button class="btn btn-success" ng-click="saveEvent('jobtask'); m.cancel()">Save & Close</button> <button class="btn btn-danger" ng-click="m.cancel()">Cancel</button>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="clear-fix">
+
+    </div>
+  </div>
+</script>
+<script type="text/ng-template" id="addJobTaskPopover.html">
+  <div class="task-search">
+
+    <h1>Job Tasks</h1>
+    <p>
+      Select which specific job tasks you want to see on the calendar
+    </p>
+    <div class="dropdown row">
+      <div class="col-md-12">
+        <input type="text" placeholder="Search for Job Tasks" ng-model="jobTaskSearch" class="form-control" />
+        <div class="search-results">
+          <div ng-repeat="tasks in jobTasks | filter: jobTaskSearch">
+
+            <div class="checkbox">
+              <label><input type="checkbox" ng-model="tasks.selected"> <i class="fa fa-gavel"></i>{{tasks.title}}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-danger btn-sm col-sm-12" ng-click="m.jobtasksPopover=false">Close</button>
+  </div>
+</script>
+<script type="text/ng-template" id="addProductionTaskPopover.html">
+  <div class="task-search">
+
+    <h1>Production Tasks</h1>
+    <p>
+      Select which specific production tasks you want to see on the calendar
+    </p>
+
+    <div class="dropdown row">
+      <div class="col-md-12">
+        <input type="text" placeholder="Search for Job Tasks" ng-model="productionTaskSearch" class="form-control" />
+        <div class="search-results">
+          <div ng-repeat="tasks in productionTasks | filter: productionTaskSearch">
+
+            <div class="checkbox">
+              <label><input type="checkbox" ng-model="tasks.selected"> <i class="fa fa-clock-o"></i>{{tasks.title}}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-danger btn-sm col-sm-12" ng-click="m.productiontasksPopover=false">Close</button>
+  </div>
+</script>
+<script type="text/ng-template" id="sharePopover.html">
+  <div class="share-sheet">
+
+
+    <div class="container-fluid">
+      <!-- <div class="col-sm-4">
+        <i class="fa fa-5x fa-print"></i> Print
+      </div> -->
+      <div class="col-sm-12">
+        <button class="btn btn-large btn-default">
+        <i class="fa fa-calendar"></i> Send to iCal</button>
+
+      </div>
+      <!-- <div class="col-sm-4">
+        <i class="fa fa-5x fa-envelope"></i> Email
+
+      </div> -->
+    </div>
+
+  </div>
+</script>
+<script type="text/ng-template" id="addResourcesPopover.html">
+  <div class="task-search">
+
+    <h1>Add Resources</h1>
+    <div class="">
+      <div class="col-md-12">
+        <ul class="nav nav-tabs">
+          <li ng-class="{'active':tab == 'users' || tab ==  null}" ng-click="tab='users'"><a>Employees</a></li>
+          <!-- <li ng-class="{'active':tab == 'equip'}" ng-click="tab='equip'"><a>Equipment</a></li> -->
+        </ul>
+      </div>
+
+      <div class="col-md-12 add-resource-items" ng-show="tab == 'users' || tab == null">
+        <div class="well">
+          <input type="text" class="form-control search-input" ng-model="employeeSearch" placeholder="Search for employees" />
+          <div ng-repeat="item in resources.employees | filter: employeeSearch" class="item" ng-class="{'active':item.selected }" ng-click="addResourceItem(item, 'employee'); item.selected = !item.selected">
+            <i class="fa fa-user margin-right-10" style="color:{{item.color}}">
+
+            </i>{{item.title}} <b class="fa fa-plus pull-right" ng-show="!item.selected"></b><b class="fa fa-close pull-right" ng-show="item.selected"></b>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 add-resource-items" ng-show="tab == 'equip'">
+        <div class="well">
+          <input type="text" class="form-control" ng-model="equipmentSearch" placeholder="Search for employees" />
+          <div ng-repeat="item in resources.equipments | filter: equipmentSearch" class="item" ng-class="{'active':item.selected }" ng-click="addResourceItem(item, 'equipment'); item.selected = !item.selected">
+            {{item.title}} <b class="fa fa-plus pull-right" ng-show="!item.selected"></b><b class="fa fa-close pull-right" ng-show="item.selected"></b>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="addRemoveResourcesPopover.html">
+  <div class="task-search">
+
+    <h1>Resources</h1>
+    <p>
+      You can add and remove resources here. Select which resources you want to see on the calendar
+    </p>
+    <div class="row selection-row">
+      <div class="col-md-12">
+
+        <i class="fa fa-chevron-down pull-right" ng-show="!groupSelect" ng-click="groupSelect = !groupSelect"></i>
+        <i class="fa fa-chevron-up pull-right" ng-show="groupSelect" ng-click="groupSelect = !groupSelect"></i>
+        <div class="checkbox">
+          <label><input type="checkbox" ng-model="groupSelect"> Groups
+                            </label>
+        </div>
+      </div>
+    </div>
+    <div class="dropdown row" ng-if="groupSelect">
+      <div class="col-md-12">
+        <input type="text" placeholder="Search for Groups" ng-model="groupFilter" class="form-control" />
+        <div class="search-results">
+          <div ng-repeat="group in groups | filter: groupFilter">
+            <div class="checkbox">
+              <label><input type="checkbox" ng-model="group.selected"> {{group.title}}
+        </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="row selection-row">
+      <div class="col-md-12">
+        <i class="fa fa-chevron-down pull-right" ng-show="!partSelect" ng-click="partSelect = !partSelect"></i>
+        <i class="fa fa-chevron-up pull-right" ng-show="partSelect" ng-click="partSelect = !partSelect"></i>
+        <div class="checkbox">
+          <label><input type="checkbox" ng-model="partSelect"> Participants</label>
+        </div>
+      </div>
+    </div>
+    <div class="dropdown row" ng-if="partSelect">
+      <div class="col-md-12">
+        <input type="text" placeholder="Search for Participants" ng-model="participantFilter" class="form-control" />
+        <div class="search-results">
+          <div ng-repeat="participant in participants | filter: participantFilter">
+            <div class="checkbox">
+              <label><input type="checkbox" ng-model="participant.selected"> {{participant.title}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row selection-row">
+      <div class="col-md-12">
+        <i class="fa fa-chevron-down pull-right" ng-show="!employeeSelect" ng-click="employeeSelect = !employeeSelect"></i>
+        <i class="fa fa-chevron-up pull-right" ng-show="employeeSelect" ng-click="employeeSelect = !employeeSelect"></i>
+        <div class="checkbox">
+          <label><input type="checkbox" ng-model="employeeSelect"> Employee
+                            </label>
+        </div>
+      </div>
+    </div>
+    <div class="dropdown row" ng-if="employeeSelect">
+      <div class="col-md-12">
+        <input type="text" placeholder="Search for Participants" ng-model="employeeFilter" class="form-control" />
+        <div class="search-results">
+          <div ng-repeat="employee in employees | filter: employeeFilter">
+            <div class="checkbox">
+              <label><input type="checkbox" ng-model="employee.selected"> {{employee.title}}
+        </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="row selection-row">
+      <div class="col-md-12">
+        <i class="fa fa-chevron-down pull-right" ng-show="!equipmentSelect" ng-click="equipmentSelect = !equipmentSelect"></i>
+        <i class="fa fa-chevron-up pull-right" ng-show="equipmentSelect" ng-click="equipmentSelect = !equipmentSelect"></i>
+        <div class="checkbox">
+          <label><input type="checkbox" ng-model="equipmentSelect"> Equipment
+                            </label>
+        </div>
+      </div>
+    </div>
+    <div class="dropdown row" ng-if="equipmentSelect">
+      <div class="col-md-12">
+        <input type="text" placeholder="Search for Participants" ng-model="equipmentFilter" class="form-control" />
+        <div class="search-results">
+          <div ng-repeat="equipment in equipments | filter: equipmentFilter">
+            <div class="checkbox">
+              <label><input type="checkbox" ng-model="equipment.selected"> {{equipment.title}}
+        </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+  </div>
+
+</script>
+<script type="text/ng-template" id="addEmployeesPopover.html">
+  <div class="task-search">
+
+    <h1>Employees</h1>
+    <p>
+      Select which specific employee's tasks you want to see on the calendar
+    </p>
+    <div class="dropdown row">
+      <div class="col-md-12">
+        <input type="text" placeholder="Search for Employees" ng-model="employeeFilter" class="form-control" />
+        <div class="search-results">
+          <div ng-repeat="employee in employees | filter: employeeFilter">
+            <div class="checkbox" ng-show="!employee.selected">
+              <label><input type="checkbox" ng-model="employee.selected"> {{employee.title}}
+        </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-danger btn-sm col-sm-12" ng-click="m.employeesPopover=false">Close</button>
+
+  </div>
+
+</script>
+
+<!-- <script type="text/ng-template" id="currentViewPopover.html">
+  <div>
+    <h1>Calendar Views</h1>
+    <p>
+      You can save your current calendar view with all filters and resources selected, load previous views or reset to a default view.
+    </p>
+  </div>
+</script> -->
+
+<script type="text/ng-template" id="addGroupsPopover.html">
+  <div class="task-search">
+
+    <h1>Groups</h1>
+    <p>
+      Select which group's tasks you want to see on the calendar
+    </p>
+    <div class="dropdown row">
+      <div class="col-md-12">
+        <input type="text" placeholder="Search for Groups" ng-model="groupsFilter" class="form-control" />
+        <div class="search-results">
+          <div ng-repeat="employee in groups | filter: groupsFilter">
+            <div class="checkbox" ng-show="!employee.selected">
+              <label><input type="checkbox" ng-model="employee.selected">
+                <div class="color-block-small" style="background:{{employee.color}}">
+
+                </div>{{employee.title}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-danger btn-sm col-sm-12" ng-click="m.groupsPopover=false">Close</button>
+
+  </div>
+
+</script>
+<script type="text/ng-template" id="addParticipantsPopover.html">
+  <div class="task-search">
+
+    <h1>Participants</h1>
+    <p>
+      Select which participants's tasks you want to see on the calendar
+    </p>
+    <div class="dropdown row">
+      <div class="col-md-12">
+        <input type="text" placeholder="Search for Participants" ng-model="participantFilter" class="form-control" />
+        <div class="search-results">
+          <div ng-repeat="employee in participants | filter: participantFilter">
+            <div class="checkbox" ng-show="!employee.selected">
+              <label><input type="checkbox" ng-model="employee.selected"> {{employee.title}}
+        </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-danger btn-sm col-sm-12" ng-click="m.participantsPopover=false">Close</button>
+
+  </div>
+
+</script>
+<script type="text/ng-template" id="addDivisionsPopover.html">
+  <div class="task-search">
+
+    <h1>Divisions</h1>
+    <p>
+      Select which division's tasks you want to see on the calendar
+    </p>
+    <div class="dropdown row">
+      <div class="col-md-12">
+        <input type="text" placeholder="Search for Divisions" ng-model="participantFilter" class="form-control" />
+        <div class="search-results">
+          <div ng-repeat="employee in divisions | filter: participantFilter">
+            <div class="checkbox" ng-show="!employee.selected">
+              <label><input type="checkbox" ng-model="employee.selected">
+        <img ng-src="imgs/divisions/{{employee.url}}" class="popover-image-icon"/> {{employee.title}}
+        </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-danger btn-sm col-sm-12" ng-click="m.divisionsPopover=false">Close</button>
+  </div>
+
+</script>
+
+
+<script type="text/ng-template" id="manageGroupModal.html">
+  <!-- <div class="modal-header">
+    <h3 class="modal-title">Manage Groups</h3>
+  </div> -->
+  <div class="modal-body manage-groups-modal"> <button type="button pull-right" class="close" data-dismiss="modal" aria-hidden="true" ng-click="m.cancel()"><i class="fa fa-times-circle"></i></button>
+
+    <div class="group-block" ng-show="m.groupstep== null">
+      <h2><i class="fa fa-users"></i>Manage Groups</h2>
+      <p>
+        Select a group below or
+        <button class="btn btn-primary" ng-click="createGroup(); m.selectedItem = null; m.groupstep=0">Create Group</button>
+      </p>
+      <div class="dropdown">
+        <input class="form-control" ng-model="groupModalFilter" placeholder="Filter group name" />
+
+        <div class="group-item" ng-repeat="item in groups | filter: groupModalFilter" ng-click="m.selectedItem = item; m.groupstep = 0 ">
+
+          <div class="color-block" style="background: {{item.color}}">
+
+          </div>{{item.title}}
+          <div class="clearfix">
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="manage-groups" ng-show="m.groupstep == 0">
+      <div class="heading">
+        <button class="btn btn-primary btn-small pull-left" ng-click="m.groupstep=null"><b class="fa fa-chevron-left"></b></button>
+        <h2 class="pull-left">{{m.selectedItem.title || "Enter a group name"}}</h2>
+
+        <div class="clearfix">
+
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+
+        <div class="col-md-3">
+          <label>Group name:</label>
+        </div>
+        <div class="col-md-6">
+          <input class="form-control" ng-model="m.selectedItem.title" placeholder="Enter group name" />
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="col-md-3">
+          <label>Group color:</label>
+        </div>
+        <div class="col-md-9">
+
+          <div class="color-block color-large" colorpicker  ng-model="m.selectedItem.color" style="background:{{m.selectedItem.color || '#333333'}}">
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="row">
+        <div class="col-md-3">
+          <label>Assign Resources:</label>
+
+          <button class="btn btn-sm btn-primary pull-left btn-assign-resource" uib-popover-template="'addResourcesPopover.html'" popover-trigger="'outsideClick'" class="btn btn-default pull-right" popover-placement="auto">Assign Resources <b class="fa fa-arrow-right margin-left-0"></b></button>
+
+        </div>
+        <div class="col-md-9">
+          <div class="well margin-bottom-0">
+            <div ng-repeat="item in assignedResource | orderBy:'type'" class="added-item">
+              <i class="fa fa-user margin-right-10" style="color:{{item.color}}" colorpicker ng-model="item.color">
+
+              </i> {{item.title}} <b class="fa fa-close" ng-click="removeResource()"></b>
+            </div>
+            <div class="clearfix">
+
+            </div>
+            <h1 ng-show="assignedResource.length==0" class="no-results">No resources assigned</h1>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- <div class="row">
+        <div class="col-md-12">
+          <div class="well">
+            <div ng-repeat="item in assignedResource | orderBy:'type'" class="added-item">
+              <div class="color-block" style="background:{{item.color}}">
+
+              </div>{{item.title}} <b class="fa fa-close" ng-click="removeResource()"></b>
+            </div>
+            <div class="clearfix">
+
+            </div>
+            <h1 ng-show="assignedResource.length==0" class="no-results">No resources added</h1>
+          </div>
+        </div>
+      </div> -->
+
+<div class="row">
+  <div class="col-md-6 col-md-push-3">
+    <button class="btn btn-success " ng-click="saveGroup()">Save Group</button>
+
+  </div>
+</div>
+        </div>
+    <div class="clear-fix">
+
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="eventPopover.html">
+  <div>
+
+    {{m.currentEvent.title}} {{m.currentEvent.start}} {{m.currentEvent.end}}
+    <a href="http://google.com" target="blank">link</a>
+  </div>
+  <!-- <div class="form-group form-inline">
+         <label>Customer Name:</label>
+        <p>
+          sdfsdf
+        </p>
+         <label>Job Number:</label>
+         <p>
+           WTR-234234
+         </p>
+         <label>Address:</label>
+         <p>
+           123 ABC Blvd
+         </p>
+         <label>State/Province</label>
+         <p>
+           ON
+         </p>
+         <label>Zip/Postal Code</label>
+         <p>
+           M2H1J3
+         </p>
+         <label>Main Phone</label>
+         <p>
+           647-648-1705
+         </p>
+         <label>Start:</label>
+         <p>
+           12:30pm
+         </p>
+         <label>End:</label>
+         <p>
+          1:30pm
+         </p>
+       </div> -->
+</script>
