@@ -49,10 +49,15 @@ html {
   background-size: auto 198px;
   width: 100%;
 }
+.event-popover{
+  font-size:12px;
+  width:150px;
+  h4{font-size:14px;margin:0;padding:0}
 
+}
 .popover {
   max-width: 600px;
-  min-width: 300px;
+  min-width: 200px;
   max-height: 400px; //  overflow: scroll;
   background: #f7f7f7;
 
@@ -571,7 +576,7 @@ html {
 
       &.pull-left {
         margin-right: 10px;
-        font-size: 20px;
+        font-size: 14px;
       }
     }
   }
@@ -589,7 +594,7 @@ html {
     h1 {
       // background: #eff8ff;
       padding: 10px;
-      margin: -10px -15px 10px;
+      margin: -10px -10px 0;
       border-radius: 6px 6px 0 0;
       font-size: 14px;
     }
@@ -661,8 +666,8 @@ html {
       box-shadow: 0 0 0 rgba(0,0,0,0.1);
       transition: 0.2s;
       background: #fff;
-      color: #333;
-      border: 2px solid #333;
+      color: #555;
+      border: 1px solid #333;
 
       &:hover {
         cursor: pointer;
@@ -679,11 +684,18 @@ html {
         margin: 1px 5px 1px 1px;
       }
 
-      .calendar-icon {
+      .fa-icon {
         float: left;
-        height: 15px;
-        line-height: 15px;
-        width: 15px;
+        height: 20px;
+        line-height: 20px;
+        width: 20px;
+        font-size: 14px;
+        clear: both;
+      }
+
+      .complete-icon {
+        color: #7ED321;
+        float: left;
       }
     }
 
@@ -698,8 +710,13 @@ html {
     }
 
     .calendar-event {
-      border-color: #FBB643;
-      color: #FBB643;
+
+    border-color: #f5a422;
+    color: #f5a422;
+    }
+
+    .completed-event {
+      background: #eeeeee;
     }
 
     .prod-event {
@@ -757,6 +774,10 @@ html {
   background: #f9f9f9;
   border-radius: 10px;
 
+  .no-background {
+    background: none !important;
+  }
+
   hr {
     margin: 10px 0;
     padding: 0;
@@ -768,6 +789,13 @@ html {
   }
 
   .heading {
+    label {
+      float: left !important;
+      min-width: initial !important;
+      margin-top: 3px !important;
+      padding-right: 20px !important;
+    }
+
     h4 {
       text-align: center;
       color: #555;
@@ -777,33 +805,36 @@ html {
     .item {
       margin: 0;
       float: left;
-      padding: 20px;
-      margin-bottom: -12px;
-      padding-bottom: 22px;
-      margin-top: -12px;
-      padding-top: 22px;
+      padding: 15px;
+      margin-bottom: 0;
+      padding-bottom: 15px;
+      margin-top: -5px;
+      padding-top: 15px;
+      font-size: 14px;
+      margin-right: 5px;
+      border: 2px solid transparent;
+      color: #676767;
 
-      &.active {
-        border-bottom: 2px solid #4990de;
-
-        &:hover {
-          border-radius: 8px 8px 0 0;
-        }
+      &.active,
+      &:active {
+        border: 2px solid #4990de !important;
+        background: #eee;
+        color: #555;
+        border-radius: 8px;
       }
 
       .fa {
         float: left;
         background: #ccc;
-        height: 30px;
-        font-size: 14px;
-        margin: -6px;
-        width: 30px;
-        margin-right: 10px;
+        height: 20px;
+        font-size: 9px;
+        margin: -2px -8px;
+        width: 20px;
+        margin-right: 6px;
         display: block;
         border-radius: 50px;
-        line-height: 30px;
+        line-height: 20px;
         color: #fff;
-        box-shadow: 0 1px 1px rgba(0,0,0,0.2);
       }
 
       .fa-gavel {
@@ -820,7 +851,8 @@ html {
 
       &:hover {
         background: #eee;
-        border-radius: 8px 8px 0 0;
+        border-radius: 8px;
+        border: 2px solid #ccc;
         cursor: pointer;
       }
     }
@@ -830,10 +862,10 @@ html {
     label {
       margin-top: 0;
       min-width: 120%;
-      background: #f3f3f3;
+      // background: #f3f3f3;
       border-radius: 3px 0 0 3px;
       padding: 7px 7px 7px 10px;
-      font-weight: normal;
+      font-weight: normal !important;
       margin: 0;
       color: #000;
       font-weight: bold;
@@ -934,6 +966,10 @@ html {
       }
     }
   }
+}
+
+.padding-left-0 {
+  padding-left: 0;
 }
 
 .margin-right-10 {

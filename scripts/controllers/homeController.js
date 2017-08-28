@@ -208,6 +208,23 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
     children: [5, 6, 7],
     selected: false
   }];
+  $scope.offices = [{
+    title: 'Atlanta',
+    divid: 1,
+    selected: false
+  }, {
+    title: 'Utah',
+    divid: 1,
+    selected: false
+  }, {
+    title: 'Oxford',
+    divid: 1,
+    selected: false
+  }, {
+    title: 'Toronto',
+    divid: 1,
+    selected: false
+  }]
   $scope.divisions = [{
     title: 'Bio Hazard',
     color: '#FF5151',
@@ -561,9 +578,21 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
 
 
   /* alert on eventClick */
-  $scope.alertOnEventClick = function(date, jsEvent, view) {
-    $scope.alertMessage = (date.type + ' was clicked ');
+  $scope.alertOnEventClick = function(event) {
+    console.log('CLICKED was clicked ');
+    console.log(event);
+    $scope.m.selectedEvent = {};
+    if(event.className == "calendar-event")
+    $scope.m.selectedEvent.taskType = 'calendarEvent';
+    if(event.className == "job-event")
+    $scope.m.selectedEvent.taskType = 'jobTask';
+    if(event.className == "marketing-event")
+    $scope.m.selectedEvent.taskType = 'marketingTask';
+    //console.log(view);
+    //console.log(jsEvent);
 
+        $scope.m.selectedEvent.startDate = event.start;
+            $scope.m.selectedEvent.endDate = event.end;
     $scope.m.openEventModal();
     //console.log(jsEvent);
     //console.log(view);
@@ -589,15 +618,15 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
   };
   /* add and removes an event source of choice */
   /* add custom event*/
-  $scope.addEvent = function() {
-    $scope.events.push({
-      title: 'Open Sesame',
-      start: new Date(y, m, 28),
-      end: new Date(y, m, 29),
-      stick: true,
-      className: ['openSesame']
-    });
-  };
+  // $scope.addEvent = function() {
+  //   $scope.events.push({
+  //     title: 'Open Sesame',
+  //     start: new Date(y, m, 28),
+  //     end: new Date(y, m, 29),
+  //     stick: true,
+  //     className: ['openSesame']
+  //   });
+  // };
   /* remove event */
   $scope.remove = function(index) {
     $scope.events.splice(index, 1);
@@ -627,26 +656,33 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
       // 'tooltip': event.title,
       // 'tooltip-append-to-body': true
       'popover-trigger': "'mouseenter'",
-      'popover-popup-close-delay': 1000,
-      'popover-popup-delay': 1000,
+      'popover-popup-close-delay': 0,
+      'popover-popup-delay': 0,
+      'popover-placement': 'top-right',
       'uib-popover-template': "'eventPopover.html'",
     });
     // console.log(element);
     // console.log(element.parentNode.nodeName)
-    console.log($scope.toggleList)
+
     console.log(event)
+
+    console.log('I"M RENDERING')
     if (!$scope.m.toggleList) {
       if (event.color) {
         element.prepend("<b class='color-block' style='background:" + event.color + "'></b>");
       }
-      if (event.type == "job-event")
-        element.prepend("<b class='fa fa-gavel calendar-icon'></b>");
-      if (event.type == "marketing-event") {
+      if (event.className == "job-event")
+        element.prepend("<b class='fa fa-gavel fa-icon'></b>");
+      if (event.className == "marketing-event") {
         //element.prepend("<div class='color-block'></span>");
-        element.prepend("<b class='fa fa-line-chart calendar-icon'></b>");
+        element.prepend("<b class='fa fa-line-chart fa-icon'></b>");
       }
-      if (event.type == "calendar-event")
-        element.prepend("<b class='fa fa-calendar calendar-icon'></b>");
+      if (event.className == "calendar-event")
+        element.prepend("<b class='fa fa-calendar fa-icon'></b>");
+      try {
+        if (event.eventInfo.completedDate || event.eventInfo.taskCompleted)
+          element.prepend("<b class='fa fa-check-circle fa-icon complete-icon'></b>");
+      } catch (e) {}
     }
     $compile(element)($scope);
   };
@@ -667,15 +703,27 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
       }
     });
   }
-  $scope.m.addEventModal = function(event) {
+  $scope.m.addEventModal = function(start, end, allday) {
     $scope.step = null;
+    $scope.m.selectedEvent = {};
+    $scope.m.selectedEvent.taskType = 'jobTask';
+    console.log('startdate');
+    console.log(start);
+    console.log(end);
+    console.log(allday);
+
+    $scope.m.selectedEvent.startDate = start;
+    $scope.m.selectedEvent.endDate = end;
+    if (!start.hasTime())
+      $scope.m.selectedEvent.allDay = true;
     modalInstance = $uibModal.open({
       animation: true,
       ariaLabelledBy: 'modal-title',
       ariaDescribedBy: 'modal-body',
       templateUrl: 'eventModal.html',
+      keyboard: false,
 
-      size: 'lg',
+      size: 'md',
       scope: $scope,
       resolve: {
         items: function() {
@@ -691,8 +739,9 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
       ariaLabelledBy: 'modal-title',
       ariaDescribedBy: 'modal-body',
       templateUrl: 'eventModal.html',
+      keyboard: false,
 
-      size: 'lg',
+      size: 'md',
       scope: $scope,
       resolve: {
         items: function() {
@@ -750,15 +799,16 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
           //   alert(end)
           //     alert(allday)
 
-          $scope.m.addEventModal();
+          $scope.m.addEventModal(start, end, allday);
         },
-        eventMouseover: function(event) {
+        eventMouseover: function(start, end, event) {
           // alert(start)
           //   alert(end)
           //     alert(allday)
 
           //console.log(event);
           $scope.m.currentEvent = event;
+          console.log('currentevent');
           console.log($scope.m.currentEvent);
         },
         eventClick: $scope.alertOnEventClick,
@@ -779,16 +829,32 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
     $scope.m.index = null;
   };
 
-  $scope.saveEvent = function(type) {
+  $scope.saveEvent = function() {
     //console.log($scope.start);
     //console.log($scope.end);
     //console.log($scope.jobTitle);
+    if ($scope.m.selectedEvent.taskType == "jobTask")
+      $scope.m.selectedEvent.className = "job-event";
+    if ($scope.m.selectedEvent.taskType == "marketingTask")
+      $scope.m.selectedEvent.className = "marketing-event";
+    if ($scope.m.selectedEvent.taskType == "calendarEvent")
+      $scope.m.selectedEvent.className = "calendar-event";
+
+    try {
+      if ($scope.m.selectedEvent.completedDate || $scope.m.selectedEvent.taskCompleted)
+        $scope.m.selectedEvent.className += " completed-event";
+    } catch (e) {}
     $scope.events.push({
-      title: $scope.m.selectedEvent.jobTitle,
+      title: $scope.m.selectedEvent.taskDescription,
       start: $scope.m.selectedEvent.startDate,
       end: $scope.m.selectedEvent.endDate,
-      className: [type]
+      eventInfo: $scope.m.selectedEvent,
+      className: $scope.m.selectedEvent.className
     });
+    console.log('events')
+    console.log($scope.events);
+    console.log($scope.eventSources);
+
   };
   $scope.addResourceItem = function(item, type) {
     item.type = type;
@@ -807,7 +873,7 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
 
   $scope.m.WynEvents = [{
       userid: 3,
-      resourceId: 'a',
+      resourceId: ['a', 'a1', 'a2'],
       title: 'WTR-231',
       type: 'job-event',
       start: new Date(y, m, 1),
@@ -846,7 +912,7 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
       resourceId: 'a',
       type: 'job-event',
       start: new Date(y, m, 8),
-      end: new Date(y, m, 8),
+        end: new Date(y, m, 8),
       allDay: false,
 
       className: "job-event",
@@ -1319,9 +1385,9 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
 
   $scope.taskCompleted = function() {
     if ($scope.m.selectedEvent.taskCompleted) {
-console.log($scope.m.selectedEvent.completedDate );
+      console.log($scope.m.selectedEvent.completedDate);
       if (!$scope.m.selectedEvent.completedDate) {
-        $scope.m.selectedEvent.completedDate = new Date();
+        $scope.m.selectedEvent.completedDate = moment();
       }
     }
   }

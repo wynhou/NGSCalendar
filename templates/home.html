@@ -250,11 +250,12 @@
       <div class="modal-draggable">
 
         <div class="heading">
+          <label>Task Type:</label>
           <h4 ng-click="m.selectedEvent.taskType='jobTask'" ng-class="{active: m.selectedEvent.taskType=='jobTask'}" class="item">
           <i class="fa fa-gavel"></i>Job Task
         </h4>
           <h4 ng-click="m.selectedEvent.taskType='calendarEvent'" ng-class="{active: m.selectedEvent.taskType=='calendarEvent'}" class="item">
-          <i class="fa fa-calendar"></i>Calender Event
+          <i class="fa fa-calendar"></i>Calendar Event
         </h4>
 
           <h4 ng-click="m.selectedEvent.taskType='marketingTask'" ng-class="{active: m.selectedEvent.taskType=='marketingTask'}" class="item">
@@ -284,7 +285,7 @@
             <label>Company:</label>
           </div>
           <div class="col-md-9">
-            <select ng-model="m.selectedEvent.Company" class="form-control"><option>Never</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select>
+            <select ng-model="m.selectedEvent.Company" class="form-control"><option>Next Gear Solutions</option><option>ServiceMaster</option><option>Apple</option><option>Google</option><option>Amazon</option></select>
 
           </div>
         </div>
@@ -294,7 +295,7 @@
             <label>Company Contact:</label>
           </div>
           <div class="col-md-9">
-            <select ng-model="m.selectedEvent.companyContact" class="form-control"><option>Never</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select>
+            <select ng-model="m.selectedEvent.companyContact" ng-disabled="!m.selectedEvent.Company" class="form-control"><option>DeMar Derozan</option><option>Kyle Lowry</option><option>Serge Ibaka</option></select>
 
           </div>
         </div>
@@ -304,7 +305,7 @@
             <label>Activity:</label>
           </div>
           <div class="col-md-9">
-            <select ng-model="m.selectedEvent.Activity" class="form-control"><option>Never</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select>
+            <select ng-model="m.selectedEvent.Activity" class="form-control"><option>Phone Call</option><option>Golf</option></select>
 
           </div>
         </div>
@@ -314,7 +315,7 @@
             <label>Amount:</label>
           </div>
           <div class="col-md-6">
-            <input type="text" class="form-control" ng-model="m.selectedEvent.amount" />
+            <input type="text" class="form-control" ui-money-mask ng-model="m.selectedEvent.amount" />
 
           </div>
         </div>
@@ -331,8 +332,11 @@
           <div class="col-md-3">
             <label>Start Date: </label>
           </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" datetime-picker="MM/dd/yyyy HH:mm" ng-model="m.selectedEvent.startDate" ng-click="datestart=true" is-open="datestart" ng-required="true" close-text="Close" />
+          <div class="col-md-4">
+            <!-- <input moment-picker="m.selectedEvent.startDate" ng-model="m.selectedEvent.startDate" class="form-control"/> -->
+
+            <input class="form-control" ng-model="m.selectedEvent.startDate" ng-model-options="{ updateOn: 'blur' }" placeholder="Start Date..." moment-picker="m.selectedEvent.startDate">
+            <!-- <input type="text" class="form-control" datetime-picker="MM/dd/yyyy HH:mm" ng-model="m.selectedEvent.startDate" ng-click="datestart=true" is-open="datestart" ng-required="true" close-text="Close" /> -->
           </div>
         </div>
         <div class="row">
@@ -340,16 +344,24 @@
           <div class="col-md-3">
             <label>End Date:</label>
           </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" datetime-picker="MM/dd/yyyy HH:mm" ng-model="m.selectedEvent.endDate" ng-click="dateend=true" is-open="dateend" ng-required="true" close-text="Close" />
+          <div class="col-md-4">
+
+            <input class="form-control" ng-model="m.selectedEvent.endDate" ng-model-options="{ updateOn: 'blur' }" placeholder="End Date..." moment-picker="m.selectedEvent.endDate">
+            <!-- <input type="text" class="form-control" datetime-picker="MM/dd/yyyy HH:mm" ng-model="m.selectedEvent.endDate" ng-click="dateend=true" is-open="dateend" ng-required="true" close-text="Close" /> -->
+            <div class="checkbox  margin-top-0">
+              <label><input type="checkbox" ng-model="m.selectedEvent.allDay"> All Day Task
+                </label>
+            </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-3">
-            <label>Date completion</label>
+            <label>Date completion:</label>
           </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" datetime-picker="MM/dd/yyyy HH:mm" ng-model="m.selectedEvent.completedDate" ng-click="datecompleted=true" is-open="datecompleted" ng-required="true" close-text="Close" />
+          <div class="col-md-4">
+            <input class="form-control" ng-model="m.selectedEvent.completedDate" placeholder="Complete date..." moment-picker="m.selectedEvent.completedDate">
+
+            <!-- <input type="text" class="form-control" datetime-picker="MM/dd/yyyy HH:mm" ng-model="m.selectedEvent.completedDate" ng-click="datecompleted=true" is-open="datecompleted" ng-required="true" close-text="Close" /> -->
             <div class="checkbox  margin-top-0">
               <label><input type="checkbox" ng-model="m.selectedEvent.taskCompleted" ng-click="taskCompleted();"> Task Completed
                 </label>
@@ -361,22 +373,80 @@
           <div class="col-md-3">
             <label>Repeat:</label>
           </div>
-          <div class="col-md-6">
-            <select ng-model="m.selectedEvent.repeat" class="form-control"><option>Never</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select>
+          <div class="col-md-4">
+            <select ng-model="m.selectedEvent.repeat" class="form-control"><option selected>Never</option><option>Hourly</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select>
           </div>
 
         </div>
-        <div class="row" ng-show="m.selectedEvent.repeat != 'Never' && m.selectedEvent.repeat != null">
+        <div ng-show="m.selectedEvent.repeat != 'Never' && m.selectedEvent.repeat != 'Hourly' && m.selectedEvent.repeat != null">
+          <div class="row">
+            <div class="col-md-3">
+              <label>Repeat every:</label>
+            </div>
+            <div class="col-md-4">
+              <input type="number" class="form-control pull-left" style="width:45%" ng-model="m.selectedEvent.repeatEvery" />
+              <div class="pull-left"><label class="no-background"><span ng-if="m.selectedEvent.repeat == 'Hourly'">hour(s)</span><span ng-if="m.selectedEvent.repeat == 'Daily'">day(s)</span><span ng-if="m.selectedEvent.repeat == 'Weekly'">week(s)</span><span ng-if="m.selectedEvent.repeat == 'Monthly'">month(s)</span><span ng-if="m.selectedEvent.repeat == 'Yearly'">year(s)</span></label>
+              </div>
+            </div>
+          </div>
+          <div class="row" ng-if="m.selectedEvent.repeat != 'Hourly'&&m.selectedEvent.repeat != 'Daily'">
+            <div class="col-md-3">
+              <label>Repeat On:</label>
+            </div>
+            <div class="col-md-9" ng-if="m.selectedEvent.repeat == 'Weekly'">
+              <input type="checkbox"> Su
+              <input type="checkbox"> Mo
+              <input type="checkbox"> Tu
+              <input type="checkbox"> We
+              <input type="checkbox"> Th
+              <input type="checkbox"> Fr
+              <input type="checkbox"> Sa
+            </div>
+            <div class="col-md-4" ng-if="m.selectedEvent.repeat == 'Monthly' || m.selectedEvent.repeat == 'Yearly'">
+              <div class="row">
+                <input type="checkbox"> Day <input class="form-control" style="display:inline-block; width:25%" />
 
-          <label>Repeat every:</label>
-          <input type="number" class="form-control" ng-model="m.selectedEvent.repeatEvery" />
-          <div class="pull-right"><span ng-if="m.selectedEvent.repeat == 'Daily'">days</span><span ng-if="m.selectedEvent.repeat == 'Weekly'">weeks</span><span ng-if="m.selectedEvent.repeat == 'Monthly'">months</span><span ng-if="m.selectedEvent.repeat == 'Yearly'">years</span>
+              </div>
 
+            </div>
+          </div>
+          <div class="row">
+
+          </div>
+
+        </div>
+        <div ng-show="m.selectedEvent.repeat == 'Hourly'">
+          <div class="row">
+            <div class="col-md-3">
+              <label>Recur every:</label>
+            </div>
+            <div class="col-md-4">
+              <input type="number" class="form-control pull-left" style="width:45%" ng-model="m.selectedEvent.repeatEvery" />
+              <div class="pull-left"><label class="no-background">hour(s)</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div ng-show="m.selectedEvent.repeat != null && m.selectedEvent.repeat != 'Never'">
+          <div class="row">
+            <div class="col-md-3">
+              <label>End:</label>
+            </div>
+            <div class="col-md-6">
+              <label class="margin-top-0 padding-left-0"><input type="checkbox" ng-model="m.selectedEvent.repeatNever"> Never
+              </label>
+              <label class="margin-top-0 padding-left-0"><input type="checkbox" ng-model="m.selectedEvent.repeatOccurence"> After <input type="number" class="form-control" style="display:inline-block; width:25%" /> occurrences
+              </label>
+              <label class="margin-top-0 padding-left-0"><input type="checkbox" ng-model="m.selectedEvent.repeatDate"> On   <input class="form-control" ng-model="m.selectedEvent.repeatDate"style="display:inline-block; width:70%"  format="LL" max-view="day"ng-model-options="{ updateOn: 'blur' }" placeholder="End Date..." moment-picker="m.selectedEvent.repeatDate">
+
+              </label>
+
+            </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-3">
-            <label>Assigned Resources</label>
+            <label>Assign Resources:</label>
 
             <button class="btn btn-sm btn-primary pull-left btn-assign-resource" uib-popover-template="'addResourcesPopover.html'" popover-trigger="'outsideClick'" class="btn btn-default pull-right" popover-placement="auto">Assign Resources <b class="fa fa-arrow-right margin-left-0"></b></button>
 
@@ -403,7 +473,7 @@
         <div class="row">
 
           <div class="col-md-9 col-md-push-3">
-            <button class="btn btn-success" ng-click="saveEvent('jobtask'); m.cancel()">Save & Close</button> <button class="btn btn-danger" ng-click="m.cancel()">Cancel</button>
+            <button class="btn btn-success" ng-click="saveEvent(); m.cancel()">Save & Close</button> <button class="btn btn-danger" ng-click="m.cancel()">Cancel</button>
 
           </div>
         </div>
@@ -739,6 +809,33 @@
 
 </script>
 
+<script type="text/ng-template" id="addOfficesPopover.html">
+  <div class="task-search">
+
+    <h1>Offices</h1>
+    <p>
+      Select which office's tasks you want to see on the calendar
+    </p>
+    <div class="dropdown row">
+      <div class="col-md-12">
+        <input type="text" placeholder="Search for Divisions" ng-model="officesFilter" class="form-control" />
+        <div class="search-results">
+          <div ng-repeat="item in offices | filter: officesFilter">
+            <div class="checkbox" ng-show="!item.selected">
+              <label><input type="checkbox" ng-model="item.selected">
+        <img ng-src="imgs/divisions/{{item.url}}" class="popover-image-icon"/> {{item.title}}
+        </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-danger btn-sm col-sm-12" ng-click="m.officesPopover=false">Close</button>
+  </div>
+
+</script>
+
 
 <script type="text/ng-template" id="manageGroupModal.html">
   <!-- <div class="modal-header">
@@ -747,7 +844,9 @@
   <div class="modal-body manage-groups-modal"> <button type="button pull-right" class="close" data-dismiss="modal" aria-hidden="true" ng-click="m.cancel()"><i class="fa fa-times-circle"></i></button>
 
     <div class="group-block" ng-show="m.groupstep== null">
-      <h2><i class="fa fa-users"></i>Manage Groups</h2>
+      <div class="modal-draggable">
+        <h2><i class="fa fa-users"></i>Manage Groups</h2>
+      </div>
       <p>
         Select a group below or
         <button class="btn btn-primary" ng-click="createGroup(); m.selectedItem = null; m.groupstep=0">Create Group</button>
@@ -769,7 +868,7 @@
 
     </div>
     <div class="manage-groups" ng-show="m.groupstep == 0">
-      <div class="heading">
+      <div class="heading modal-draggable">
         <button class="btn btn-primary btn-small pull-left" ng-click="m.groupstep=null"><b class="fa fa-chevron-left"></b></button>
         <h2 class="pull-left">{{m.selectedItem.title || "Enter a group name"}}</h2>
 
@@ -794,7 +893,7 @@
         </div>
         <div class="col-md-9">
 
-          <div class="color-block color-large" colorpicker  ng-model="m.selectedItem.color" style="background:{{m.selectedItem.color || '#333333'}}">
+          <div class="color-block color-large" colorpicker ng-model="m.selectedItem.color" style="background:{{m.selectedItem.color || '#333333'}}">
           </div>
         </div>
       </div>
@@ -841,13 +940,13 @@
         </div>
       </div> -->
 
-<div class="row">
-  <div class="col-md-6 col-md-push-3">
-    <button class="btn btn-success " ng-click="saveGroup()">Save Group</button>
+      <div class="row">
+        <div class="col-md-6 col-md-push-3">
+          <button class="btn btn-success " ng-click="saveGroup()">Save Group</button>
 
-  </div>
-</div>
         </div>
+      </div>
+    </div>
     <div class="clear-fix">
 
     </div>
@@ -855,10 +954,19 @@
 </script>
 
 <script type="text/ng-template" id="eventPopover.html">
-  <div>
+  <div class="event-popover">
 
-    {{m.currentEvent.title}} {{m.currentEvent.start}} {{m.currentEvent.end}}
-    <a href="http://google.com" target="blank">link</a>
+      <div class="col-md-12">
+    <h4>{{m.currentEvent.title}}</h4>
+    <div class="row">
+
+      Start: {{m.currentEvent.start | amDateFormat:'MMM Do YY, h:mm a'}}
+    </div>
+    <div class="row">
+      End: {{m.currentEvent.end | amDateFormat:'MMM Do YY, h:mm a'}}
+    </div>
+  </div>
+    <!-- <a href="http://google.com" target="blank">link</a> -->
   </div>
   <!-- <div class="form-group form-inline">
          <label>Customer Name:</label>

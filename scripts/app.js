@@ -1,5 +1,5 @@
 var CalendarApp = angular.module('CalendarApp', ['ngRoute',   'ngAnimate','LocalStorageModule', 'ui.bootstrap', 'ui.bootstrap.datetimepicker', 'ui.calendar',
-'colorpicker.module',  'mgcrea.ngStrap'
+'colorpicker.module',  'mgcrea.ngStrap','ui.utils.masks','ui.select','moment-picker','angularMoment'
 ]);
 
 CalendarApp.controller('mainController', function mainController($scope, localStorageService, $location, $route) {
@@ -28,3 +28,29 @@ CalendarApp.config(['$routeProvider', function($routeProvider) {
 }]).config(['$compileProvider', function($compileProvider) {
   $compileProvider.debugInfoEnabled(false);
 }]);
+
+CalendarApp.config(['momentPickerProvider', function (momentPickerProvider) {
+        momentPickerProvider.options({
+            /* Picker properties */
+            locale:        'en',
+            format:        'L LT',
+            minView:       'year',
+            maxView:       'hour',
+            startView:     'month',
+            autoclose:     true,
+            today:         true,
+            keyboard:      true,
+
+            /* Extra: Views properties */
+            leftArrow:     '&larr;',
+            rightArrow:    '&rarr;',
+            yearsFormat:   'YYYY',
+            monthsFormat:  'MMM',
+            daysFormat:    'D',
+            hoursFormat:   'H:[00]',
+            minutesFormat: moment.localeData().longDateFormat('LT').replace(/[aA]/, ''),
+            secondsFormat: 'ss',
+            minutesStep:   15,
+            secondsStep:   1
+        });
+    }]);
