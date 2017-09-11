@@ -17,6 +17,10 @@ html {
   overflow: hidden;
 }
 
+select {
+  -webkit-appearance: none;
+}
+
 .task-search {
   // width: 400px;
   // display: block;
@@ -43,20 +47,52 @@ html {
 }
 
 .next-gear-header {
-  background: url("../imgs/header.png");
+  background: url("../imgs/header.png") #d0e6f5;
+  background-repeat: no-repeat;
   display: block;
-  height: 197px;
+  height: 107px;
   background-size: auto 198px;
   width: 100%;
 }
-.event-popover{
-  font-size:12px;
-  width:150px;
-  h4{font-size:14px;margin:0;padding:0}
 
+.event-popover {
+  font-size: 10px;
+  padding-bottom: 20px;
+  //width: 150px;
+  .btn {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  h4 {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+  }
+
+  hr {
+    margin: 5px 0;
+    clear: both;
+  }
+
+  .form-group {
+    p {
+      display: inline-block;
+      margin: 0;
+      padding: 0;
+    }
+
+    label {
+      margin: 0;
+      padding: 0;
+      display: inline-block;
+      width: 90px;
+    }
+  }
 }
+
 .popover {
-  max-width: 600px;
+  width: 600px;
   min-width: 200px;
   max-height: 400px; //  overflow: scroll;
   background: #f7f7f7;
@@ -100,7 +136,7 @@ html {
     }
 
     .fa-money {
-      background: #12A879;
+      background: #5fcf3c;
     }
 
     .fa-clock-o {
@@ -246,11 +282,11 @@ html {
 }
 
 .btn-warning {
-  background: #FBB643;
+  background: #12a1ee;
 }
 
 .btn-orange {
-  background: #F78053;
+  background: #eb2a2a;
 }
 
 .header {
@@ -288,10 +324,11 @@ html {
   }
 
   h1 {
-    height: 25px;
-    font-size: 30px;
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: normal;
+    line-height: 35px;
+    font-size: 25px;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    font-weight: bold;
     margin: 0 30px 0 0;
   }
 
@@ -371,13 +408,11 @@ html {
 
   h4 {
     margin: 0 -15px 10px;
-    padding: 10px;
+    padding: 10px 10px 5px;
     font-weight: bold;
     color: #000;
-    font-size: 16px;
-    /* border-bottom: 1px solid #bed6f3; */
+    font-size: 14px;
     margin-bottom: 0;
-    margin-top: 30px;
     /* border-top: 1px solid #bed6f3; */
   }
 
@@ -386,6 +421,7 @@ html {
     margin: 0 -15px;
     border-bottom: 1px solid #eee;
     color: #555;
+    font-size: 13px;
 
     &.checked {
       background: #f5f5f5;
@@ -394,6 +430,20 @@ html {
 
     .fa-trash {
       color: #aaa;
+
+      &:hover {
+        cursor: pointer;
+        color: #000;
+      }
+    }
+
+    .fa-pencil {
+      color: #aaa;
+
+      &:hover {
+        cursor: pointer;
+        color: #000;
+      }
     }
 
     &:hover {
@@ -452,6 +502,7 @@ html {
     border-left: 0;
     border-right: 0;
     height: 50px;
+    font-size: 13px;
     color: #555;
     font-weight: normal;
     margin: 0 -15px;
@@ -462,19 +513,6 @@ html {
       float: left;
       margin: 11px 10px 11px 0;
       width: 34px;
-    }
-  }
-
-  .bottom {
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    right: 25px;
-
-    .btn {
-      display: block;
-      width: 100%;
-      margin: 10px;
     }
   }
 
@@ -511,19 +549,19 @@ html {
     }
 
     .fa-gavel {
-      background: #f58059;
+      background: #12a1ee;
     }
 
     .fa-tachometer {
       background: #6488A0;
     }
 
-    .fa-line-chart {
-      background: #21a77a;
+    .fa-bar-chart {
+      background: #5fcf3c;
     }
 
     .fa-calendar {
-      background: #ffa725;
+      background: #eb2a2a;
     }
   }
 
@@ -544,6 +582,7 @@ html {
     margin: 1px -5px -5px;
     color: #666;
     margin-bottom: 1px;
+    font-size: 13px;
     background: #eeeeee;
 
     .fa-user,
@@ -629,13 +668,42 @@ html {
     border-radius: 8px;
   }
 
-  .fc-left {
+  .fc-center {
     h2 {
       font-size: 18px;
       font-weight: bold;
       line-height: 30px;
       margin: 0;
       padding: 0;
+    }
+  }
+
+  .fc-list-table {
+    .job-event {
+      border-color: #12a1ee;
+      color: #12a1ee;
+
+      .fc-event-dot {
+        background: #12a1ee;
+      }
+    }
+
+    .marketing-event {
+      border-color: #5fcf3c;
+      color: #5fcf3c;
+
+      .fc-event-dot {
+        background: #5fcf3c;
+      }
+    }
+
+    .calendar-event {
+      border-color: #eb2a2a;
+      color: #eb2a2a;
+
+      .fc-event-dot {
+        background: #eb2a2a;
+      }
     }
   }
 
@@ -690,6 +758,7 @@ html {
         line-height: 20px;
         width: 20px;
         font-size: 14px;
+        margin-top: -3px;
         clear: both;
       }
 
@@ -700,28 +769,39 @@ html {
     }
 
     .job-event {
-      border-color: #F78053;
-      color: #F78053;
+      border-color: #12a1ee;
+      color: #12a1ee;
+
+      .fc-event-dot {
+        background: #12a1ee;
+      }
     }
 
     .marketing-event {
-      border-color: #12A879;
-      color: #12A879;
+      border-color: #5fcf3c;
+      color: #5fcf3c;
+
+      .fc-event-dot {
+        background: #5fcf3c;
+      }
     }
 
     .calendar-event {
+      border-color: #eb2a2a;
+      color: #eb2a2a;
 
-    border-color: #f5a422;
-    color: #f5a422;
+      .fc-event-dot {
+        background: #eb2a2a;
+      }
     }
 
     .completed-event {
-      background: #eeeeee;
+      background: #ccc;
     }
 
     .prod-event {
-      border-color: #F78053;
-      color: #F78053;
+      border-color: #eb2a2a;
+      color: #eb2a2a;
     }
   }
 }
@@ -770,6 +850,24 @@ html {
   transition: all 0;
 }
 
+.calendar-modal {
+  .calendar-block {
+    h2 {
+      margin-top: 5px;
+      font-weight: 300;
+
+      .fa-calendar {
+        margin-right: 10px;
+        color: #3e9fe8;
+      }
+    }
+  }
+
+  .footer {
+    margin-top: 20px;
+  }
+}
+
 .event-modal {
   background: #f9f9f9;
   border-radius: 10px;
@@ -786,6 +884,19 @@ html {
 
   .checkbox {
     margin: 0;
+  }
+
+  .resources-container {
+    min-height: 90px !important;
+
+    .fa-close {
+      color: #555;
+
+      &:hover {
+        cursor: pointer;
+        color: #000;
+      }
+    }
   }
 
   .heading {
@@ -827,26 +938,28 @@ html {
         float: left;
         background: #ccc;
         height: 20px;
-        font-size: 9px;
+        font-size: 12px;
         margin: -2px -8px;
         width: 20px;
         margin-right: 6px;
         display: block;
-        border-radius: 50px;
+        text-align: center;
+        border-radius: 4px;
         line-height: 20px;
         color: #fff;
+        text-shadow: 0 1px 1px rgba(0,0,0,0.2);
       }
 
       .fa-gavel {
-        background: #F78053;
+        background: #12a1ee;
       }
 
       .fa-calendar {
-        background: #FBB643;
+        background: #eb2a2a;
       }
 
-      .fa-line-chart {
-        background: #12A879;
+      .fa-bar-chart {
+        background: #5fcf3c;
       }
 
       &:hover {
@@ -976,6 +1089,10 @@ html {
   margin-right: 10px;
 }
 
+.margin-right-24 {
+  margin-right: 24px;
+}
+
 .margin-left-10 {
   margin-left: 10px;
 }
@@ -999,6 +1116,10 @@ html {
 .manage-groups-modal {
   background: #f9f9f9;
   border-radius: 10px;
+
+  .resources-container {
+    min-height: 90px !important;
+  }
 
   .group-block {
     h2 {

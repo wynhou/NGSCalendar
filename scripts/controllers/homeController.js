@@ -1,10 +1,6 @@
 CalendarApp.controller('homeController', function homeController($scope, $http, $rootScope, $location, $uibModal, localStorageService, $timeout, uiCalendarConfig, $compile, $log) {
   $scope.m = {};
-  var date = new Date();
-  var d = date.getDate();
-  var m = date.getMonth();
-  $('.sidebar').height(($(window).height() - 300));
-  var y = date.getFullYear();
+
   $scope.resources = {};
   $scope.calView = "week";
   $scope.one = true;
@@ -17,6 +13,7 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
   $scope.m.selectedEvent.taskType = 'jobTask';
   $scope.assignedResource = [];
   $scope.groupstep = null;
+  $scope.m.resources =[];
   $scope.status = {
     events: true,
     division: true
@@ -48,7 +45,11 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
     selected: false
   }, ];
 
-
+  var date = new Date();
+  var d = date.getDate();
+  var m = date.getMonth();
+  $('.sidebar').height(($(window).height() - 200));
+  var y = date.getFullYear();
   /* event source that contains custom events on the scope */
 
   $scope.jobTasks = [{
@@ -162,36 +163,43 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
     title: 'Dion Smith',
     userid: 1,
     color: "#8d2828",
+    resourceid: 'dion',
     selected: false
   }, {
     title: 'Blair Hacche',
     userid: 2,
     color: "#28508d",
+    resourceid: 'blair',
     selected: false
   }, {
     title: 'Wyn Hou',
     userid: 3,
     color: "#41b778",
+    resourceid: 'wyn',
     selected: false
   }, {
     title: 'Alex Godlewski',
     userid: 4,
     color: "#b7a241",
+    resourceid: 'alex',
     selected: false
   }, {
     title: 'Matt Bell',
     userid: 5,
     color: "#7341b7",
-    selected: true
+    resourceid: 'matt',
+    selected: false
   }, {
     title: 'Joseph Nieh',
     userid: 6,
     color: "#41b781",
+    resourceid: 'joseph',
     selected: false
   }, {
     title: 'Adam Grace',
     userid: 7,
     color: "#62b741",
+    resourceid: 'adam',
     selected: false
   }];
 
@@ -328,8 +336,8 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
     divid: 8,
     selected: false
   }];
-  $scope.events = [];
-  $scope.events.events = [];
+  $scope.m.events = [];
+  $scope.m.events.events = [];
   // $scope.events = {
   //   events: [{
   //       id: 1,
@@ -366,9 +374,47 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
   //
   //   ],
   // }
+$scope.m.resources = [{
+  id: 'teamcanada',
+  title: 'Team Canada',
+  children: [{
+      id: 'dion',
+      title: 'Dion'
+    },
+    {
+      id: 'alex',
+      title: 'Alex'
+    },
+    {
+      id: 'wyn',
+      title: 'Wyn'
+    },
+    {
+      id: 'blair',
+      title: 'Blair'
+    }
 
+  ]
+},{
+  id: 'teamblue',
+  title: 'Team Blue',
+  children: [{
+      id: 'matt',
+      title: 'Matt'
+    },
+    {
+      id: 'adam',
+      title: 'Adam'
+    },
+    {
+      id: 'joseph',
+      title: 'Joseph'
+    }
+
+  ]
+}]
   /* event source that calls a function on every view switch */
-  $scope.eventsF = function(start, end, timezone, callback) {
+  $scope.m.eventsF = function(start, end, timezone, callback) {
     var s = new Date(start).getTime() / 1000;
     var e = new Date(end).getTime() / 1000;
     var m = new Date(start).getMonth();
@@ -385,7 +431,7 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
   $scope.removeGroupItems = function(index) {
     //console.log(index)
     //  console.log($scope.events);
-    console.log($scope.events);
+    console.log($scope.m.events);
     console.log(index);
     //
     // for (var i = 0, tot = $scope.events.length; i < tot; i++) {
@@ -425,11 +471,11 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
     // $scope.events = [];
     // $scope.eventSource = [];
     //
-    // $scope.eventSources = [$scope.events];
+    // $scope.m.eventSources = [$scope.events];
     // $('#my-calendar').fullCalendar('removeEvents')
-    // $('#my-calendar').fullCalendar('addEventSource', $scope.eventSources)
+    // $('#my-calendar').fullCalendar('addEventSource', $scope.m.eventSources)
 
-    alert('Feature Currently Unavailable');
+    //alert('Feature Currently Unavailable');
     // console.log('finished');
     // console.log($scope.events);
 
@@ -439,9 +485,13 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
 
   $scope.removeEmployeeItems = function(userid) {
 
-    $scope.eventSources = [$scope.events];
+    $scope.m.events = [];
+    $scope.m.eventSources = [$scope.m.events];
+    // uiCalendarConfig.calendars['myCalendar'].fullCalendar('removeEventSource', $scope.m.eventSources);
+    // uiCalendarConfig.calendars['myCalendar'].fullCalendar('addEventSource', $scope.m.eventSources);
+
     $('#my-calendar').fullCalendar('removeEvents')
-    $('#my-calendar').fullCalendar('addEventSource', $scope.eventSources)
+    $('#my-calendar').fullCalendar('addEventSource', $scope.m.eventSources)
 
 
   }
@@ -457,18 +507,61 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
           if (value.groupid == 1) {
             $scope.m.teamCanadaEvents.forEach(function(value, key) {
 
-              $scope.events.push(value);
+              $scope.m.events.push(value);
+
             });
+            // $scope.m.resources.push([{
+            //   id: 'teamcanada',
+            //   title: 'Team Canada',
+            //   children: [{
+            //       id: 'dion',
+            //       title: 'Dion'
+            //     },
+            //     {
+            //       id: 'alex',
+            //       title: 'Alex'
+            //     },
+            //     {
+            //       id: 'wyn',
+            //       title: 'Wyn'
+            //     },
+            //     {
+            //       id: 'blair',
+            //       title: 'Blair'
+            //     }
+            //
+            //   ]
+            // }])
+            // $scope.m.refetchResources();
 
 
           }
           if (value.groupid == 2) {
             $scope.m.teamBlueEvents.forEach(function(value, key) {
 
-              $scope.events.push(value);
+              $scope.m.events.push(value);
             });
 
 
+            // $scope.m.resources.push([{
+            //   id: 'teamblue',
+            //   title: 'Team Blue',
+            //   children: [{
+            //       id: 'matt',
+            //       title: 'Matt'
+            //     },
+            //     {
+            //       id: 'adam',
+            //       title: 'Adam'
+            //     },
+            //     {
+            //       id: 'joseph',
+            //       title: 'Joseph'
+            //     }
+            //
+            //   ]
+            // }]);
+            // $scope.m.refetchResources();
           }
           $scope.hasResource = true;
           found = true;
@@ -477,9 +570,10 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
         //  console.log($scope.events);
       })
 
-      $scope.eventSources = [$scope.events];
-      $('#my-calendar').fullCalendar('removeEvents')
-      $('#my-calendar').fullCalendar('addEventSource', $scope.eventSources)
+      $scope.m.eventSources = [$scope.m.eventSources];
+      $scope.m.eventSources = [];
+      //$('#my-calendar').fullCalendar('removeEvents')
+      //  $('#my-calendar').fullCalendar('addEventSource', $scope.m.eventsources)
 
 
 
@@ -505,37 +599,37 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
           switch (value.userid) {
             case 1:
               $scope.m.DionEvents.forEach(function(value, key) {
-                $scope.events.push(value);
+                $scope.m.events.push(value);
               });
               break;
             case 2:
               $scope.m.BlairEvents.forEach(function(value, key) {
-                $scope.events.push(value);
+                $scope.m.events.push(value);
               });
               break;
             case 3:
               $scope.m.WynEvents.forEach(function(value, key) {
-                $scope.events.push(value);
+                $scope.m.events.push(value);
               });
               break;
             case 4:
               $scope.m.AlexEvents.forEach(function(value, key) {
-                $scope.events.push(value);
+                $scope.m.events.push(value);
               });
               break;
             case 5:
               $scope.m.MattEvents.forEach(function(value, key) {
-                $scope.events.push(value);
+                $scope.m.events.push(value);
               });
               break;
             case 6:
               $scope.m.JosephEvents.forEach(function(value, key) {
-                $scope.events.push(value);
+                $scope.m.events.push(value);
               });
               break;
             case 7:
               $scope.m.AdamEvents.forEach(function(value, key) {
-                $scope.events.push(value);
+                $scope.m.events.push(value);
               });
               break;
 
@@ -582,27 +676,27 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
     console.log('CLICKED was clicked ');
     console.log(event);
     $scope.m.selectedEvent = {};
-    if(event.className == "calendar-event")
-    $scope.m.selectedEvent.taskType = 'calendarEvent';
-    if(event.className == "job-event")
-    $scope.m.selectedEvent.taskType = 'jobTask';
-    if(event.className == "marketing-event")
-    $scope.m.selectedEvent.taskType = 'marketingTask';
+    if (event.className == "calendar-event")
+      $scope.m.selectedEvent.taskType = 'calendarEvent';
+    if (event.className == "job-event")
+      $scope.m.selectedEvent.taskType = 'jobTask';
+    if (event.className == "marketing-event")
+      $scope.m.selectedEvent.taskType = 'marketingTask';
     //console.log(view);
     //console.log(jsEvent);
 
-        $scope.m.selectedEvent.startDate = event.start;
-            $scope.m.selectedEvent.endDate = event.end;
-    $scope.m.openEventModal();
+    $scope.m.selectedEvent.startDate = event.start;
+    $scope.m.selectedEvent.endDate = event.end;
+    $scope.m.openEventModal(event);
     //console.log(jsEvent);
     //console.log(view);
     //console.log(date);
 
   };
-  $scope.dayClick = function(date) {
+  $scope.dayClick = function(event) {
     $scope.alertMessage = (date.type + ' was clicked ');
 
-    $scope.m.openEventModal();
+    $scope.m.openEventModal(event);
     //console.log(jsEvent);
     //console.log(view);
     //console.log(date);
@@ -629,14 +723,34 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
   // };
   /* remove event */
   $scope.remove = function(index) {
-    $scope.events.splice(index, 1);
+    $scope.m.events.splice(index, 1);
   };
   /* Change View */
-  $scope.changeView = function(view, calendar) {
+  $scope.changeView = function(view) {
     $timeout(function() {
-      uiCalendarConfig.calendars[calendar].fullCalendar('changeView', view);
+      uiCalendarConfig.calendars['myCalendar'].fullCalendar('changeView', view);
     }, 0)
   };
+
+  $scope.m.calendarAddResource = function(item) {
+    //  alert('added!')
+    $timeout(function() {
+      uiCalendarConfig.calendars['myCalendar'].fullCalendar('addResource', item);
+    }, 0)
+  };
+  $scope.m.refetchResources = function() {
+
+    $timeout(function() {
+      uiCalendarConfig.calendars['myCalendar'].fullCalendar('refetchResources');
+    }, 0)
+  };
+  $scope.m.calendarRemoveResource = function(id) {
+    $timeout(function() {
+      uiCalendarConfig.calendars['myCalendar'].fullCalendar('removeResource', id);
+    }, 0)
+  };
+
+
   $scope.changeView('agendaWeek', 'myCalendar');
   /* Change View */
   $scope.renderCalendar = function(calendar) {
@@ -656,9 +770,10 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
       // 'tooltip': event.title,
       // 'tooltip-append-to-body': true
       'popover-trigger': "'mouseenter'",
-      'popover-popup-close-delay': 0,
-      'popover-popup-delay': 0,
-      'popover-placement': 'top-right',
+      'popover-popup-close-delay': 1500,
+      'popover-popup-delay': 1500,
+      'popover-placement': 'top',
+      'popover-animation': 'true',
       'uib-popover-template': "'eventPopover.html'",
     });
     // console.log(element);
@@ -671,13 +786,13 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
       if (event.color) {
         element.prepend("<b class='color-block' style='background:" + event.color + "'></b>");
       }
-      if (event.className == "job-event")
+      if (event.className == "job-event" || event.className == "job-event completed-event")
         element.prepend("<b class='fa fa-gavel fa-icon'></b>");
-      if (event.className == "marketing-event") {
+      if (event.className == "marketing-event" || event.className == "marketing-event completed-event") {
         //element.prepend("<div class='color-block'></span>");
-        element.prepend("<b class='fa fa-line-chart fa-icon'></b>");
+        element.prepend("<b class='fa fa-bar-chart fa-icon'></b>");
       }
-      if (event.className == "calendar-event")
+      if (event.className == "calendar-event" || event.className == "calendar-event completed-event")
         element.prepend("<b class='fa fa-calendar fa-icon'></b>");
       try {
         if (event.eventInfo.completedDate || event.eventInfo.taskCompleted)
@@ -703,6 +818,54 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
       }
     });
   }
+  $scope.m.saveCalendar = function(item) {
+    if (!$scope.m.calendarNew) {
+      $scope.m.calendars.push(item);
+    } else
+      $scope.m.calendars.forEach(function(value, key) {
+        if (value.id == item.id) {
+          $scope.m.calendars[key] = item;
+        }
+      })
+
+    $scope.m.cancel();
+
+  }
+
+  $scope.m.deleteCalendar = function(item) {
+    if (window.confirm("Are you sure you want to delete this calendar?")) {
+      $scope.m.calendars.forEach(function(value, key) {
+        if (value.title == item.title) {
+          $scope.m.calendars.splice(key, 1);
+        }
+      })
+    }
+
+    //$scope.m.cancel();
+
+  }
+  $scope.m.calendarModal = function(item, edit) {
+    $scope.m.calendarNew = edit;
+    if (item)
+      $scope.m.selectedCalendar = angular.copy(item);
+    else
+
+      $scope.m.selectedCalendar = {};
+    modalInstance = $uibModal.open({
+      animation: true,
+      ariaLabelledBy: 'modal-title',
+      ariaDescribedBy: 'modal-body',
+      templateUrl: 'calendarModal.html',
+
+      size: 'md',
+      scope: $scope,
+      resolve: {
+        items: function() {
+          return $scope.values;
+        }
+      }
+    });
+  }
   $scope.m.addEventModal = function(start, end, allday) {
     $scope.step = null;
     $scope.m.selectedEvent = {};
@@ -711,11 +874,13 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
     console.log(start);
     console.log(end);
     console.log(allday);
-
-    $scope.m.selectedEvent.startDate = start;
-    $scope.m.selectedEvent.endDate = end;
-    if (!start.hasTime())
-      $scope.m.selectedEvent.allDay = true;
+    if (start) {
+      $scope.m.selectedEvent.startDate = start;
+      if (!start.hasTime())
+        $scope.m.selectedEvent.allDay = true;
+    }
+    if (end)
+      $scope.m.selectedEvent.endDate = end;
     modalInstance = $uibModal.open({
       animation: true,
       ariaLabelledBy: 'modal-title',
@@ -733,7 +898,17 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
     });
   }
   $scope.m.openEventModal = function(event) {
-    $scope.step = 0;
+    console.log('wtf')
+    console.log(event);
+    $scope.m.selectedEvent = event.eventInfo;
+
+    if (event.start) {
+      $scope.m.selectedEvent.startDate = event.start;
+      if (!event.start.hasTime())
+        $scope.m.selectedEvent.allDay = true;
+    }
+    if (event.end)
+      $scope.m.selectedEvent.endDate = event.end;
     modalInstance = $uibModal.open({
       animation: true,
       ariaLabelledBy: 'modal-title',
@@ -751,77 +926,73 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
     });
   }
   /* config object */
-  $scope.m.resources = [{
-        id: 'a',
-        title: 'Room A',
-        children: [{
-            id: 'a1',
-            title: 'Room A1'
-          },
-          {
-            id: 'a2',
-            title: 'Room A2'
-          }
-        ]
-      },
-      {
-        id: 'b',
-        title: 'Room B'
-      },
-      {
-        id: 'c',
-        title: 'Room C'
-      },
-      {
-        id: 'd',
-        title: 'Room D'
-      }
-    ],
-    $scope.uiConfig = {
-      calendar: {
-        height: $(window).height() - 280,
-        editable: true,
-        schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-        selectable: true,
-        header: {
-          left: 'title',
-          center: '',
-          right: 'today prev,next'
-        },
-        resources: $scope.m.resources,
-        // dayClick: function(event) {
-        //   // //console.log('Day clicking');
-        //   // //console.log(event);
-        //   $scope.m.addEventModal(event);
-        // },
-        select: function(start, end, allday) {
-          // alert(start)
-          //   alert(end)
-          //     alert(allday)
 
-          $scope.m.addEventModal(start, end, allday);
-        },
-        eventMouseover: function(start, end, event) {
-          // alert(start)
-          //   alert(end)
-          //     alert(allday)
+  $scope.uiConfig = {
+    calendar: {
+      height: $(window).height() - 180,
+      editable: true,
+      nowIndicator: true,
+      schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+      selectable: true,
+      businessHours: {
+        start: '08:00',
+        end: '17:00',
+        dow: [1, 2, 3, 4, 5] // Monday is not a working day
+      },
+      header: {
+        left: 'today prev,next',
+        center: 'title',
+        right: ''
+      },
+      resources: $scope.m.resources,
+      select: function(start, end, allday) {
+        // alert(start)
+        //   alert(end)
+        //     alert(allday)
 
-          //console.log(event);
+        $scope.m.addEventModal(start, end, allday);
+      },
+      eventMouseover: function(event) {
+        // alert(start)
+        //   alert(end)
+        //     alert(allday)
+
+        //console.log(event);
+        $timeout(function() {
           $scope.m.currentEvent = event;
-          console.log('currentevent');
-          console.log($scope.m.currentEvent);
-        },
-        eventClick: $scope.alertOnEventClick,
-        eventDrop: $scope.alertOnDrop,
-        eventResize: $scope.alertOnResize,
-        eventRender: $scope.eventRender
-      }
-    };
+        }, 1500)
+        console.log('currentevent');
+        console.log($scope.m.currentEvent);
+      },
+      eventClick: $scope.alertOnEventClick,
+      eventDrop: $scope.alertOnDrop,
+      eventResize: $scope.alertOnResize,
+      eventRender: $scope.eventRender
+    }
+  };
+
+  $scope.m.loadCalendar = function(item) {
+    $scope.m.calendars.forEach(function(value, key) {
+      if (value.title == item.title) {
+        value.selected = true;
+      } else value.selected = false;
+    })
 
 
+  }
+  $scope.m.deletedCalendar = function(item) {
+
+    $scope.m.calendars.forEach(function(value, key) {
+      if (value.title == item.title) {
+        value.selected = true;
+      } else value.selected = false;
+    })
+
+
+  }
   /* event sources array*/
-  $scope.eventSources = [$scope.events];
-  //  $scope.eventSources2 = [$scope.calEventsExt, $scope.eventsF, $scope.events];
+  $scope.m.eventSources = [$scope.m.events];
+  //  $scope.m.eventSources2 = [$scope.calEventsExt, $scope.eventsF, $scope.events];
 
   $scope.m.cancel = function() {
     modalInstance.dismiss('cancel');
@@ -844,16 +1015,18 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
       if ($scope.m.selectedEvent.completedDate || $scope.m.selectedEvent.taskCompleted)
         $scope.m.selectedEvent.className += " completed-event";
     } catch (e) {}
-    $scope.events.push({
+    $scope.m.events.push({
       title: $scope.m.selectedEvent.taskDescription,
       start: $scope.m.selectedEvent.startDate,
       end: $scope.m.selectedEvent.endDate,
       eventInfo: $scope.m.selectedEvent,
-      className: $scope.m.selectedEvent.className
+      className: $scope.m.selectedEvent.className,
+      allDay: $scope.m.selectedEvent.allDay
+
     });
     console.log('events')
-    console.log($scope.events);
-    console.log($scope.eventSources);
+    console.log($scope.m.events);
+    console.log($scope.m.eventSources);
 
   };
   $scope.addResourceItem = function(item, type) {
@@ -870,515 +1043,724 @@ CalendarApp.controller('homeController', function homeController($scope, $http, 
 
     //console.log($scope.assignedResource)
   }
+  $scope.removeResource = function(item) {
 
+    $scope.assignedResource.forEach(function(value, key) {
+      if (value.title == item.title) {
+        console.log('found')
+        $scope.assignedResource.splice(key, 1);
+      }
+    })
+
+    $scope.resources.employees.forEach(function(value, key) {
+
+      if (value.title == item.title) {
+        value.selected = false;
+      }
+    })
+
+
+
+
+  }
+  $scope.m.calendars = [{
+    title: 'My Calendar',
+    selected: true,
+    default:true,
+    id: 1
+  }, {
+    title: 'Team Calendar',
+    selected: false,
+    default:false,
+    id: 2
+  }, {
+    title: 'Job Task',
+    selected: false,
+    default:false,
+    id: 3
+  }]
   $scope.m.WynEvents = [{
-      userid: 3,
-      resourceId: ['a', 'a1', 'a2'],
-      title: 'WTR-231',
-      type: 'job-event',
-      start: new Date(y, m, 1),
-      end: new Date(y, m, 1),
-      allDay: true,
-
-      className: "job-event",
-      stick: true,
+    "userid": 3,
+    "resourceId": "wyn",
+    "title": "Scrum Repeating Event",
+    "start": "2017-08-29T07:30:00",
+    "end": "2017-08-29T09:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-29T07:30:00",
+      "endDate": "2017-08-29T09:00:00",
+      "taskDescription": "Scrum Repeating Event",
+      "className": "calendar-event",
+      "repeat": "Every day",
+      "repeatEnd": "After 1 time"
     },
-    {
-      userid: 3,
-      title: 'WTR-23211',
-      resourceId: 'a',
-      type: 'job-event',
-      start: new Date(y, m, 3),
-      end: new Date(y, m, 3),
-
-      className: "job-event",
-      stick: true,
+    "className": "calendar-event",
+    "_id": 1
+  }, {
+    "userid": 3,
+    "resourceId": "wyn",
+    "title": "Scrum Repeating Event",
+    "start": "2017-08-29T07:30:00",
+    "end": "2017-08-29T09:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-29T07:30:00",
+      "endDate": "2017-08-29T09:00:00",
+      "taskDescription": "Scrum Repeating Event",
+      "className": "calendar-event",
+      "repeat": "Every day",
+      "repeatEnd": "After 1 time"
     },
-    {
-      userid: 3,
-      title: 'WTR-23132',
-      resourceId: 'a',
-      type: 'job-event',
-      start: new Date(y, m, 5),
-      end: new Date(y, m, 5),
-      allDay: false,
-
-      className: "job-event",
-      stick: true,
+    "className": "calendar-event",
+    "_id": 2
+  }, {
+    "userid": 3,
+    "resourceId": "wyn",
+    "title": "Work Order",
+    "start": "2017-08-29T12:30:00",
+    "end": "2017-08-29T15:00:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-29T12:30:00",
+      "endDate": "2017-08-29T15:00:00",
+      "jobTitle": "wtr-111",
+      "taskDescription": "Work Order",
+      "className": "job-event"
     },
-    {
-      userid: 3,
-      title: 'WTR-233',
-      resourceId: 'a',
-      type: 'job-event',
-      start: new Date(y, m, 8),
-        end: new Date(y, m, 8),
-      allDay: false,
-
-      className: "job-event",
-      stick: true,
-
+    "className": "job-event",
+    "_id": 3
+  }, {
+    "userid": 3,
+    "resourceId": "wyn",
+    "title": "Work Cleanup",
+    "start": "2017-08-28T08:30:00",
+    "end": "2017-08-28T11:00:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-28T08:30:00",
+      "endDate": "2017-08-28T11:00:00",
+      "jobTitle": "wtr-111",
+      "taskDescription": "Work Cleanup",
+      "className": "job-event"
     },
-
-  ]
-
-
+    "className": "job-event",
+    "_id": 5
+  }]
 
   $scope.m.DionEvents = [{
-      userid: 1,
-      title: 'WTR-231',
-      resourceId: 'b',
-      type: 'job-event',
-      start: new Date(y, m, 1),
-      end: new Date(y, m, 1),
-      className: "job-event",
-      stick: true,
+    "userid": 1,
+    "resourceId": "dion",
+    "title": "Scrum Repeating Event",
+    "start": "2017-08-29T07:30:00",
+    "end": "2017-08-29T09:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-29T07:30:00",
+      "endDate": "2017-08-29T09:00:00",
+      "taskDescription": "Scrum Repeating Event",
+      "className": "calendar-event",
+      "repeat": "Every day",
+      "repeatEnd": "After 1 time"
     },
-    {
-      userid: 1,
-      title: 'Scrum Meeting',
-      resourceId: 'b',
-      type: 'calendar-event',
-      start: new Date(y, m, 10, 10, 0),
-      end: new Date(y, m, 10, 10, 0),
-      allDay: false,
-      className: "calendar-event",
-      stick: true,
+    "className": "calendar-event",
+    "_id": 1
+  }, {
+    "userid": 1,
+    "resourceId": "dion",
+    "title": "Scrum Repeating Event",
+    "start": "2017-08-29T07:30:00",
+    "end": "2017-08-29T09:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-29T07:30:00",
+      "endDate": "2017-08-29T09:00:00",
+      "taskDescription": "Scrum Repeating Event",
+      "className": "calendar-event",
+      "repeat": "Every day",
+      "repeatEnd": "After 1 time"
     },
-    {
-      userid: 1,
-      title: 'Repeating Event',
-      type: 'calendar-event',
-      resourceId: 'b',
-      start: new Date(y, m, d + 8, 10, 0),
-      end: new Date(y, m, d + 8, 10, 0),
-      allDay: false,
-      className: "calendar-event",
-      stick: true,
-
+    "className": "calendar-event",
+    "_id": 2
+  }, {
+    "userid": 1,
+    "resourceId": "dion",
+    "title": "Work Order",
+    "start": "2017-08-29T12:30:00",
+    "end": "2017-08-29T15:00:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-29T12:30:00",
+      "endDate": "2017-08-29T15:00:00",
+      "jobTitle": "wtr-111",
+      "taskDescription": "Work Order",
+      "className": "job-event"
     },
+    "className": "job-event",
+    "_id": 3
+  }]
 
-  ]
-
-
-  $scope.m.AdamEvents = [{
-      userid: 7,
-      title: 'Product Meeting',
-      resourceId: 'c',
-      type: 'job-event',
-      start: new Date(y, m, 10),
-      end: new Date(y, m, 10),
-      className: "marketing-event",
-      stick: true,
-    },
-    {
-      userid: 7,
-      title: 'Product Meeting pt2',
-      type: 'calendar-event',
-      resourceId: 'c',
-      start: new Date(y, m, d - 5),
-      end: new Date(y, m, d - 5),
-      allDay: false,
-      className: "marketing-event",
-      stick: true,
-    },
-
-  ];
   $scope.m.AlexEvents = [{
-      userid: 4,
-      title: 'WTR-231',
-      type: 'job-event',
-      start: new Date(y, m, 17),
-      resourceId: 'd',
-      end: new Date(y, m, 17),
-      allDay: true,
 
-      className: "job-event",
-      stick: true,
+    "userid": 4,
+    "resourceId": "alex",
+    "title": "Cleanup",
+    "start": "2017-08-28T08:30:00",
+    "end": "2017-08-28T15:00:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-28T08:30:00",
+      "endDate": "2017-08-28T15:00:00",
+      "jobTitle": "wtr-333",
+      "taskDescription": "Cleanup",
+      "className": "job-event"
     },
-    {
-      userid: 4,
-      title: 'WTR-23211',
-      type: 'job-event',
-      start: new Date(y, m, 21),
-      end: new Date(y, m, 21),
-
-      className: "job-event",
-      stick: true,
+    "className": "job-event",
+    "_id": 1
+  }, {
+    "userid": 4,
+    "resourceId": "alex",
+    "title": "Renovation Work",
+    "start": "2017-08-30T11:00:00",
+    "end": "2017-08-30T14:00:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-30T11:00:00",
+      "endDate": "2017-08-30T14:00:00",
+      "jobTitle": "wtr-111",
+      "taskDescription": "Renovation Work",
+      "className": "job-event"
     },
-    {
-      userid: 4,
-      title: 'WTR-23132',
-      type: 'job-event',
-      start: new Date(y, m, 22),
-      end: new Date(y, m, 22),
-      allDay: false,
-
-      className: "job-event",
-      stick: true,
+    "className": "job-event",
+    "_id": 2
+  }, {
+    "userid": 4,
+    "resourceId": "alex",
+    "title": "Meeting with manager",
+    "start": "2017-08-31T08:30:00",
+    "end": "2017-08-31T10:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-31T08:30:00",
+      "endDate": "2017-08-31T10:00:00",
+      "taskDescription": "Meeting with manager",
+      "className": "calendar-event"
     },
-
-  ]
+    "className": "calendar-event",
+    "_id": 3
+  }]
 
   $scope.m.BlairEvents = [{
-      userid: 2,
-      title: 'WTR-231',
-      type: 'job-event',
-      start: new Date(y, m, 1),
-      end: new Date(y, m, 1),
-      className: "job-event",
-      stick: true,
+    "userid": 2,
+    "resourceId": "blair",
+    "title": "Fire Damage",
+    "start": "2017-08-28",
+    "end": "2017-08-29",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-28",
+      "allDay": true,
+      "endDate": "2017-08-29",
+      "jobTitle": "wtr-333",
+      "taskDescription": "Fire Damage",
+      "className": "job-event"
     },
-    {
-      userid: 2,
-      title: 'Scrum Meeting',
-      type: 'calendar-event',
-      start: new Date(y, m, 3, 10, 0),
-      end: new Date(y, m, 3, 10, 0),
-      allDay: false,
-      className: "calendar-event",
-      stick: true,
+    "className": "job-event",
+    "allDay": true,
+    "_id": 1
+  }, {
+    "userid": 2,
+    "resourceId": "blair",
+    "title": "Meeting with the boss",
+    "start": "2017-08-31T11:00:00",
+    "end": "2017-08-31T17:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-31T11:00:00",
+      "endDate": "2017-08-31T17:00:00",
+      "taskDescription": "Meeting with the boss",
+      "className": "calendar-event"
     },
-    {
-      userid: 2,
-      title: 'Repeating Event',
-      type: 'calendar-event',
-      start: new Date(y, m, d + 8, 10, 0),
-      end: new Date(y, m, d + 8, 10, 0),
-      allDay: false,
-      className: "calendar-event",
-      stick: true,
-
-    },
-
-  ];
+    "className": "calendar-event",
+    "_id": 2
+  }]
   $scope.m.MattEvents = [{
-      userid: 5,
-      title: 'WTR-231',
-      type: 'job-event',
-      start: new Date(y, m, 1),
-      end: new Date(y, m, 1),
-      className: "job-event",
-      stick: true
+    "userid": 5,
+    "resourceId": "matt",
+    "title": "Water Damage Job",
+    "start": "2017-08-28T08:00:00",
+    "end": "2017-08-28T13:30:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-28T08:00:00",
+      "endDate": "2017-08-28T13:30:00",
+      "jobTitle": "wtr-123",
+      "taskDescription": "Water Damage Job",
+      "className": "job-event"
     },
-    {
-      userid: 5,
-      title: 'Marketing Meeting',
-      type: 'marketing-event',
-      start: new Date(y, m, d - 5),
-      end: new Date(y, m, d - 5),
-      className: "marketing-event",
-      stick: true
+    "className": "job-event",
+    "_id": 1
+  }, {
+    "userid": 5,
+    "resourceId": "matt",
+    "title": "Marketing Meeting",
+    "start": "2017-08-29T09:30:00",
+    "end": "2017-08-29T12:00:00",
+    "eventInfo": {
+      "taskType": "marketingTask",
+      "startDate": "2017-08-29T09:30:00",
+      "endDate": "2017-08-29T12:00:00",
+      "Company": "ServiceMaster",
+      "companyContact": "DeMar Derozan",
+      "amount": 342.34,
+      "taskDescription": "Marketing Meeting",
+      "className": "marketing-event"
     },
-    {
-      userid: 5,
-      title: 'Scrum Meeting',
-      type: 'calendar-event',
-      start: new Date(y, m, 3, 10, 0),
-      end: new Date(y, m, 3, 10, 0),
-      allDay: false,
-      className: "calendar-event",
-      stick: true,
+    "className": "marketing-event",
+    "_id": 2
+  }, {
+    "userid": 5,
+    "resourceId": "matt",
+    "title": "PTO",
+    "start": "2017-08-30T08:30:00",
+    "end": "2017-08-30T10:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-30T08:30:00",
+      "endDate": "2017-08-30T10:00:00",
+      "taskDescription": "PTO",
+      "className": "calendar-event"
     },
-    {
-      userid: 5,
-      title: 'Repeating Event',
-      type: 'calendar-event',
-      start: new Date(y, m, d + 4, 10, 0),
-      end: new Date(y, m, d + 4, 10, 0),
-      allDay: false,
-      className: "calendar-event",
-      stick: true,
-
-    },
-
-  ];
+    "className": "calendar-event",
+    "_id": 3
+  }]
   $scope.m.JosephEvents = [{
-      userid: 6,
-      title: 'Product Meeting',
-      type: 'marketing-event',
-      start: new Date(y, m, d + 32),
-      end: new Date(y, m, d + 32),
-      className: "marketing-event",
-      stick: true,
+    "userid": 3,
+    "resourceId": "joseph",
+    "title": "Working with Steve",
+    "start": "2017-08-28T10:30:00",
+    "end": "2017-08-28T15:30:00",
+    "eventInfo": {
+      "taskType": "marketingTask",
+      "startDate": "2017-08-28T10:30:00",
+      "endDate": "2017-08-28T15:30:00",
+      "Company": "Apple",
+      "companyContact": "Kyle Lowry",
+      "Activity": "Phone Call",
+      "amount": 400,
+      "taskDescription": "Working with Steve",
+      "className": "marketing-event"
     },
-    {
-      userid: 6,
-      title: 'Management Meeting',
-      type: 'marketing-event',
-      start: new Date(y, m, d + 1),
-      end: new Date(y, m, d + 1),
-      className: "marketing-event",
-      stick: true,
+    "className": "marketing-event",
+    "_id": 1
+  }, {
+    "userid": 3,
+    "resourceId": "joseph",
+    "title": "Hurricane Improvement",
+    "start": "2017-08-29T09:00:00",
+    "end": "2017-08-29T12:30:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-29T09:00:00",
+      "endDate": "2017-08-29T12:30:00",
+      "jobTitle": "wtr-111",
+      "taskDescription": "Hurricane Improvement",
+      "className": "job-event"
     },
-    {
-      userid: 6,
-      title: 'Management Meeting',
-      type: 'marketing-event',
-      start: new Date(y, m, d + 4),
-      end: new Date(y, m, d + 4),
-      className: "marketing-event",
-      stick: true,
+    "className": "job-event",
+    "_id": 2
+  }, {
+    "userid": 3,
+    "resourceId": "joseph",
+    "title": "Flood Damage",
+    "start": "2017-08-31T11:00:00",
+    "end": "2017-08-31T14:00:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-31T11:00:00",
+      "endDate": "2017-08-31T14:00:00",
+      "jobTitle": "wtr-333",
+      "taskDescription": "Flood Damage",
+      "className": "job-event"
     },
-
-
-  ]
+    "className": "job-event",
+    "_id": 3
+  }]
+  $scope.m.AdamEvents = [{
+    "userid": 7,
+    "resourceId": "adam",
+    "title": "Morning Breakfast",
+    "start": "2017-08-28T06:30:00",
+    "end": "2017-08-28T11:30:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-28T06:30:00",
+      "endDate": "2017-08-28T11:30:00",
+      "taskDescription": "Morning Breakfast",
+      "className": "calendar-event"
+    },
+    "className": "calendar-event",
+    "_id": 1
+  }, {
+    "userid": 7,
+    "resourceId": "adam",
+    "title": "Work Order 3",
+    "start": "2017-08-30T09:30:00",
+    "end": "2017-08-30T14:30:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-30T09:30:00",
+      "endDate": "2017-08-30T14:30:00",
+      "jobTitle": "wtr-111",
+      "taskDescription": "Work Order 3",
+      "className": "job-event"
+    },
+    "className": "job-event",
+    "_id": 2
+  }]
 
   $scope.m.teamCanadaEvents = [{
-      userid: 3,
-      title: 'WTR-231',
-      type: 'job-event',
-      start: new Date(y, m, 1),
-      color: '#4AA2FF',
-      end: new Date(y, m, 1),
-      allDay: true,
-
-      className: "job-event",
-      stick: true,
+    "userid": 3,
+    "resourceId": "wyn",
+    "title": "Scrum Repeating Event",
+    "start": "2017-08-29T07:30:00",
+    "end": "2017-08-29T09:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-29T07:30:00",
+      "endDate": "2017-08-29T09:00:00",
+      "taskDescription": "Scrum Repeating Event",
+      "className": "calendar-event",
+      "repeat": "Every day",
+      "repeatEnd": "After 1 time"
     },
-    {
-      userid: 3,
-      title: 'WTR-23211',
-      type: 'job-event',
-      start: new Date(y, m, 3),
-      color: '#4AA2FF',
-      end: new Date(y, m, 3),
-
-      className: "job-event",
-      stick: true,
+    "className": "calendar-event",
+    "_id": 1
+  }, {
+    "userid": 3,
+    "resourceId": "wyn",
+    "title": "Scrum Repeating Event",
+    "start": "2017-08-29T07:30:00",
+    "end": "2017-08-29T09:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-29T07:30:00",
+      "endDate": "2017-08-29T09:00:00",
+      "taskDescription": "Scrum Repeating Event",
+      "className": "calendar-event",
+      "repeat": "Every day",
+      "repeatEnd": "After 1 time"
     },
-    {
-      userid: 3,
-      title: 'WTR-23132',
-      type: 'job-event',
-      start: new Date(y, m, 5),
-      color: '#4AA2FF',
-      end: new Date(y, m, 5),
-      allDay: false,
-
-      className: "job-event",
-      stick: true,
+    "className": "calendar-event",
+    "_id": 2
+  }, {
+    "userid": 3,
+    "resourceId": "wyn",
+    "title": "Work Order",
+    "start": "2017-08-29T12:30:00",
+    "end": "2017-08-29T15:00:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-29T12:30:00",
+      "endDate": "2017-08-29T15:00:00",
+      "jobTitle": "wtr-111",
+      "taskDescription": "Work Order",
+      "className": "job-event"
     },
-    {
-      userid: 3,
-      title: 'WTR-233',
-      type: 'job-event',
-      start: new Date(y, m, 8),
-      color: '#4AA2FF',
-      end: new Date(y, m, 8),
-      allDay: false,
-
-      className: "job-event",
-      stick: true,
-
-    }, {
-      userid: 1,
-      title: 'WTR-231',
-      type: 'job-event',
-      start: new Date(y, m, 1),
-      color: '#4AA2FF',
-      end: new Date(y, m, 1),
-      className: "job-event",
-      stick: true,
+    "className": "job-event",
+    "_id": 3
+  }, {
+    "userid": 3,
+    "resourceId": "wyn",
+    "title": "Work Cleanup",
+    "start": "2017-08-28T08:30:00",
+    "end": "2017-08-28T11:00:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-28T08:30:00",
+      "endDate": "2017-08-28T11:00:00",
+      "jobTitle": "wtr-111",
+      "taskDescription": "Work Cleanup",
+      "className": "job-event"
     },
-    {
-      userid: 1,
-      title: 'Scrum Meeting',
-      type: 'calendar-event',
-      start: new Date(y, m, 10, 10, 0),
-      color: '#4AA2FF',
-      end: new Date(y, m, 10, 10, 0),
-      allDay: false,
-      className: "calendar-event",
-      stick: true,
+    "className": "job-event",
+    "_id": 5
+  }, {
+    "userid": 1,
+    "resourceId": "dion",
+    "title": "Scrum Repeating Event",
+    "start": "2017-08-29T07:30:00",
+    "end": "2017-08-29T09:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-29T07:30:00",
+      "endDate": "2017-08-29T09:00:00",
+      "taskDescription": "Scrum Repeating Event",
+      "className": "calendar-event",
+      "repeat": "Every day",
+      "repeatEnd": "After 1 time"
     },
-    {
-      userid: 1,
-      title: 'Repeating Event',
-      type: 'calendar-event',
-      start: new Date(y, m, d + 8, 10, 0),
-      color: '#4AA2FF',
-      end: new Date(y, m, d + 8, 10, 0),
-      allDay: false,
-      className: "calendar-event",
-      stick: true,
-
-    }, {
-      userid: 4,
-      title: 'WTR-231',
-      type: 'job-event',
-      start: new Date(y, m, 17),
-      color: '#4AA2FF',
-      end: new Date(y, m, 17),
-      allDay: true,
-
-      className: "job-event",
-      stick: true,
+    "className": "calendar-event",
+    "_id": 1
+  }, {
+    "userid": 1,
+    "resourceId": "dion",
+    "title": "Scrum Repeating Event",
+    "start": "2017-08-29T07:30:00",
+    "end": "2017-08-29T09:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-29T07:30:00",
+      "endDate": "2017-08-29T09:00:00",
+      "taskDescription": "Scrum Repeating Event",
+      "className": "calendar-event",
+      "repeat": "Every day",
+      "repeatEnd": "After 1 time"
     },
-    {
-      userid: 4,
-      title: 'WTR-23211',
-      type: 'job-event',
-      start: new Date(y, m, 21),
-      color: '#4AA2FF',
-      end: new Date(y, m, 21),
-
-      className: "job-event",
-      stick: true,
+    "className": "calendar-event",
+    "_id": 2
+  }, {
+    "userid": 1,
+    "resourceId": "dion",
+    "title": "Work Order",
+    "start": "2017-08-29T12:30:00",
+    "end": "2017-08-29T15:00:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-29T12:30:00",
+      "endDate": "2017-08-29T15:00:00",
+      "jobTitle": "wtr-111",
+      "taskDescription": "Work Order",
+      "className": "job-event"
     },
-    {
-      userid: 4,
-      title: 'WTR-23132',
-      type: 'job-event',
-      start: new Date(y, m, 22),
-      color: '#4AA2FF',
-      end: new Date(y, m, 22),
-      allDay: false,
+    "className": "job-event",
+    "_id": 3
+  }, {
 
-      className: "job-event",
-      stick: true,
-    }, {
-      userid: 2,
-      title: 'WTR-231',
-      type: 'job-event',
-      start: new Date(y, m, 1),
-      color: '#4AA2FF',
-      end: new Date(y, m, 1),
-      className: "job-event",
-      stick: true,
+    "userid": 4,
+    "resourceId": "alex",
+    "title": "Cleanup",
+    "start": "2017-08-28T08:30:00",
+    "end": "2017-08-28T15:00:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-28T08:30:00",
+      "endDate": "2017-08-28T15:00:00",
+      "jobTitle": "wtr-333",
+      "taskDescription": "Cleanup",
+      "className": "job-event"
     },
-    {
-      userid: 2,
-      title: 'Scrum Meeting',
-      type: 'calendar-event',
-      start: new Date(y, m, 3, 10, 0),
-      color: '#4AA2FF',
-      end: new Date(y, m, 3, 10, 0),
-      allDay: false,
-      className: "calendar-event",
-      stick: true,
+    "className": "job-event",
+    "_id": 1
+  }, {
+    "userid": 4,
+    "resourceId": "alex",
+    "title": "Renovation Work",
+    "start": "2017-08-30T11:00:00",
+    "end": "2017-08-30T14:00:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-30T11:00:00",
+      "endDate": "2017-08-30T14:00:00",
+      "jobTitle": "wtr-111",
+      "taskDescription": "Renovation Work",
+      "className": "job-event"
     },
-    {
-      userid: 2,
-      title: 'Repeating Event',
-      type: 'calendar-event',
-      start: new Date(y, m, d + 8, 10, 0),
-      color: '#4AA2FF',
-      end: new Date(y, m, d + 8, 10, 0),
-      allDay: false,
-      className: "calendar-event",
-      stick: true,
-
+    "className": "job-event",
+    "_id": 2
+  }, {
+    "userid": 4,
+    "resourceId": "alex",
+    "title": "Meeting with manager",
+    "start": "2017-08-31T08:30:00",
+    "end": "2017-08-31T10:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-31T08:30:00",
+      "endDate": "2017-08-31T10:00:00",
+      "taskDescription": "Meeting with manager",
+      "className": "calendar-event"
     },
-  ]
-
-
-
+    "className": "calendar-event",
+    "_id": 3
+  }, {
+    "userid": 2,
+    "resourceId": "blair",
+    "title": "Fire Damage",
+    "start": "2017-08-28",
+    "end": "2017-08-29",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-28",
+      "allDay": true,
+      "endDate": "2017-08-29",
+      "jobTitle": "wtr-333",
+      "taskDescription": "Fire Damage",
+      "className": "job-event"
+    },
+    "className": "job-event",
+    "allDay": true,
+    "_id": 1
+  }, {
+    "userid": 2,
+    "resourceId": "blair",
+    "title": "Meeting with the boss",
+    "start": "2017-08-31T11:00:00",
+    "end": "2017-08-31T17:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-31T11:00:00",
+      "endDate": "2017-08-31T17:00:00",
+      "taskDescription": "Meeting with the boss",
+      "className": "calendar-event"
+    },
+    "className": "calendar-event",
+    "_id": 2
+  }]
 
 
   $scope.m.teamBlueEvents = [{
-      userid: 7,
-      title: 'Product Meeting',
-      type: 'job-event',
-      start: new Date(y, m, 10),
-      end: new Date(y, m, 10),
-      color: '#4AA2FF',
-      className: "marketing-event",
-      stick: true,
+    "userid": 5,
+    "resourceId": "matt",
+    "title": "Water Damage Job",
+    "start": "2017-08-28T08:00:00",
+    "end": "2017-08-28T13:30:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-28T08:00:00",
+      "endDate": "2017-08-28T13:30:00",
+      "jobTitle": "wtr-123",
+      "taskDescription": "Water Damage Job",
+      "className": "job-event"
     },
-    {
-      userid: 7,
-      title: 'Product Meeting pt2',
-      type: 'calendar-event',
-      start: new Date(y, m, d - 5),
-      end: new Date(y, m, d - 5),
-      allDay: false,
-      color: '#4AA2FF',
-      className: "marketing-event",
-      stick: true,
-    }, {
-      userid: 6,
-      title: 'Product Meeting',
-      type: 'marketing-event',
-      start: new Date(y, m, d + 31),
-      end: new Date(y, m, d + 32),
-      className: "marketing-event",
-      color: '#4AA2FF',
-      stick: true,
+    "className": "job-event",
+    "_id": 1
+  }, {
+    "userid": 5,
+    "resourceId": "matt",
+    "title": "Marketing Meeting",
+    "start": "2017-08-29T09:30:00",
+    "end": "2017-08-29T12:00:00",
+    "eventInfo": {
+      "taskType": "marketingTask",
+      "startDate": "2017-08-29T09:30:00",
+      "endDate": "2017-08-29T12:00:00",
+      "Company": "ServiceMaster",
+      "companyContact": "DeMar Derozan",
+      "amount": 342.34,
+      "taskDescription": "Marketing Meeting",
+      "className": "marketing-event"
     },
-    {
-      userid: 6,
-      title: 'Management Meeting',
-      type: 'marketing-event',
-      start: new Date(y, m, d + 1),
-      end: new Date(y, m, d + 1),
-      className: "marketing-event",
-      color: '#4AA2FF',
-      stick: true,
+    "className": "marketing-event",
+    "_id": 2
+  }, {
+    "userid": 5,
+    "resourceId": "matt",
+    "title": "PTO",
+    "start": "2017-08-30T08:30:00",
+    "end": "2017-08-30T10:00:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-30T08:30:00",
+      "endDate": "2017-08-30T10:00:00",
+      "taskDescription": "PTO",
+      "className": "calendar-event"
     },
-    {
-      userid: 6,
-      title: 'Management Meeting',
-      type: 'marketing-event',
-      start: new Date(y, m, d + 4),
-      end: new Date(y, m, d + 4),
-      color: '#4AA2FF',
-      className: "marketing-event",
-      stick: true,
-    }, {
-      userid: 5,
-      title: 'WTR-231',
-      type: 'job-event',
-      start: new Date(y, m, 1),
-      end: new Date(y, m, 1),
-      color: '#4AA2FF',
-      className: "job-event",
-      stick: true
+    "className": "calendar-event",
+    "_id": 3
+  }, {
+    "userid": 3,
+    "resourceId": "joseph",
+    "title": "Working with Steve",
+    "start": "2017-08-28T10:30:00",
+    "end": "2017-08-28T15:30:00",
+    "eventInfo": {
+      "taskType": "marketingTask",
+      "startDate": "2017-08-28T10:30:00",
+      "endDate": "2017-08-28T15:30:00",
+      "Company": "Apple",
+      "companyContact": "Kyle Lowry",
+      "Activity": "Phone Call",
+      "amount": 400,
+      "taskDescription": "Working with Steve",
+      "className": "marketing-event"
     },
-    {
-      userid: 5,
-      title: 'Marketing Meeting',
-      type: 'marketing-event',
-      start: new Date(y, m, d - 2),
-      color: '#4AA2FF',
-      end: new Date(y, m, d - 2),
-      className: "marketing-event",
-      stick: true
+    "className": "marketing-event",
+    "_id": 1
+  }, {
+    "userid": 3,
+    "resourceId": "joseph",
+    "title": "Hurricane Improvement",
+    "start": "2017-08-29T09:00:00",
+    "end": "2017-08-29T12:30:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-29T09:00:00",
+      "endDate": "2017-08-29T12:30:00",
+      "jobTitle": "wtr-111",
+      "taskDescription": "Hurricane Improvement",
+      "className": "job-event"
     },
-    {
-      userid: 5,
-      title: 'Scrum Meeting',
-      type: 'calendar-event',
-      start: new Date(y, m, 3, 10, 0),
-      color: '#4AA2FF',
-      end: new Date(y, m, 3, 10, 0),
-      allDay: false,
-      className: "calendar-event",
-      stick: true,
+    "className": "job-event",
+    "_id": 2
+  }, {
+    "userid": 3,
+    "resourceId": "joseph",
+    "title": "Flood Damage",
+    "start": "2017-08-31T11:00:00",
+    "end": "2017-08-31T14:00:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-31T11:00:00",
+      "endDate": "2017-08-31T14:00:00",
+      "jobTitle": "wtr-333",
+      "taskDescription": "Flood Damage",
+      "className": "job-event"
     },
-    {
-      userid: 5,
-      title: 'Repeating Event',
-      color: '#4AA2FF',
-      type: 'calendar-event',
-      start: new Date(y, m, d + 4, 10, 0),
-      end: new Date(y, m, 3, 10, 0),
-      allDay: false,
-      className: "calendar-event",
-      stick: true,
-
+    "className": "job-event",
+    "_id": 3
+  }, {
+    "userid": 7,
+    "resourceId": "adam",
+    "title": "Morning Breakfast",
+    "start": "2017-08-28T06:30:00",
+    "end": "2017-08-28T11:30:00",
+    "eventInfo": {
+      "taskType": "calendarEvent",
+      "startDate": "2017-08-28T06:30:00",
+      "endDate": "2017-08-28T11:30:00",
+      "taskDescription": "Morning Breakfast",
+      "className": "calendar-event"
     },
-
-
-  ]
+    "className": "calendar-event",
+    "_id": 1
+  }, {
+    "userid": 7,
+    "resourceId": "adam",
+    "title": "Work Order 3",
+    "start": "2017-08-30T09:30:00",
+    "end": "2017-08-30T14:30:00",
+    "eventInfo": {
+      "taskType": "jobTask",
+      "startDate": "2017-08-30T09:30:00",
+      "endDate": "2017-08-30T14:30:00",
+      "jobTitle": "wtr-111",
+      "taskDescription": "Work Order 3",
+      "className": "job-event"
+    },
+    "className": "job-event",
+    "_id": 2
+  }]
 
 
 
 
   $scope.init = function() {
-    $scope.m.MattEvents.forEach(function(value, key) {
-      $scope.events.push(value);
-    });
+    // $scope.m.MattEvents.forEach(function(value, key) {
+    //   $scope.events.push(value);
+    // });
+    $timeout(function() {
+       $scope.employees[4].selected = true;
+    }, 0)
   }
   $scope.init();
 
